@@ -1,0 +1,33 @@
+﻿<Window x:Class="TestApp.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="600">
+
+  
+
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" Background="White">
+            <MenuItem Header="File" BorderBrush="Black"></MenuItem>
+            <MenuItem Header="View" BorderBrush="Black"></MenuItem>
+            <MenuItem Header="Tools" BorderBrush="Black"></MenuItem>
+        </Menu>
+
+        <StackPanel Width="150" >
+        </StackPanel>
+        <Border BorderBrush="Black" BorderThickness="1">
+
+            <Canvas/>
+
+        </Border>
+        
+
+
+    </DockPanel>
+
+
+
+</Window>
