@@ -7,23 +7,38 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="400" Width="600">
 
-  
+
 
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
-            <MenuItem Header="File" BorderBrush="Black"></MenuItem>
-            <MenuItem Header="View" BorderBrush="Black"></MenuItem>
-            <MenuItem Header="Tools" BorderBrush="Black"></MenuItem>
+            <MenuItem Header="File" BorderBrush="Black">
+              <MenuItem Header="_Open"/>
+              <MenuItem Header="_Save"/>
+            </MenuItem>
+            <!-- TODO: Nice to have feature
+            <MenuItem Header="View" BorderBrush="Black">
+              <MenuItem Header="_ZoomIn"/>
+              <MenuItem Header="_ZoomOut"/>
+            </MenuItem> -->
+            <MenuItem Header="Edit" BorderBrush="Black">
+              <MenuItem Header="_Add"/>
+              <MenuItem Header="_Remove"/>
+              <MenuItem Header="_Undo"/>
+              <MenuItem Header="_Redo"/>
+            </MenuItem>
         </Menu>
 
         <StackPanel Width="150" >
+          <button Name="addClass" Click="clickAddClass">
+            <image Source="%PathToImage%"></image>
+          </button>
         </StackPanel>
         <Border BorderBrush="Black" BorderThickness="1">
 
             <Canvas/>
 
         </Border>
-        
+
 
 
     </DockPanel>
