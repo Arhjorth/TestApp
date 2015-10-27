@@ -4,11 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestApp"
+        xmlns:ViewModel="clr-namespace:TestApp.ViewModel"
+        xmlns:View="clr-namespace:TestApp.View"
         mc:Ignorable="d"
         Title="MainWindow" Height="400" Width="600">
 
 
-
+    <Window.DataContext>
+        <ViewModel:MainViewModel />
+    </Window.DataContext>
+    
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="File" BorderBrush="Black">
@@ -29,13 +34,26 @@
         </Menu>
 
         <StackPanel Width="150" >
-          <button Name="addClass" Click="clickAddClass">
-            <image Source="%PathToImage%"></image>
-          </button>
+            <Button x:Name="buttonAddClass" Content="AddClass" Command="{Binding CommandAddClass}" >
+
+                <!-- <Image Source="%PathToImage%"></Image> -->
+            </Button>
         </StackPanel>
         <Border BorderBrush="Black" BorderThickness="1">
 
-            <Canvas/>
+            <ItemsControl ItemsSource="{Binding Classes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas >
+                        </Canvas>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Fill="Blue" Width="200" Height="200"/> <!-- TODO: set width and hight-->
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
         </Border>
 

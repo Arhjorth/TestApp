@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TestApp.ViewModel;
 
 namespace TestApp.View
 {
@@ -23,6 +24,11 @@ namespace TestApp.View
         public MainWindow()
         {
             InitializeComponent();
+           
+        }
+
+        private void buttonAddClass_Click(object sender, RoutedEventArgs e) {
+
         }
     }
 }
