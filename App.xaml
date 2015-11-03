@@ -9,7 +9,7 @@
              >
 
     <Application.Resources>
-        <DataTemplate DataType="{x:Type Model:Class}">
+        <DataTemplate DataType="{x:Type Model:ClassBox}">
         </DataTemplate>
             <local:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:TestApp.ViewModel" />
     </Application.Resources>
