@@ -20,6 +20,9 @@ namespace TestApp.ViewModel
         public ICommand CommandMouseDownClassBox { get; }
         public ICommand CommandMouseMoveClassBox { get; }
         public ICommand MouseMoveShapeCommand { get; }
+        public ICommand CommandUndo { get; }
+        public ICommand CommandRedo { get; }
+
         public UndoRedoController undoRedoController = UndoRedoController.Instance;
 
         // Saves the initial point that the mouse has during a move operation.
@@ -36,17 +39,21 @@ namespace TestApp.ViewModel
             CommandMouseMoveClassBox = new RelayCommand<MouseEventArgs>(MouseMoveClassBox);
             CommandMouseUpClassBox = new RelayCommand<MouseButtonEventArgs>(MouseUpClassBox);
 
+            CommandUndo = new RelayCommand(undoRedoController.Undo/*, undoRedoController.CanUndo*/); //TODO: Fix dis!
+            CommandRedo = new RelayCommand(undoRedoController.Redo/*, undoRedoController.CanRedo*/);
+
           //  CommandMouseMoveClassbox = new RelayCommand<MouseButtonEventArgs>(MousemMoveClassBox);
 
         }
 
         private void AddClassBox() {
             undoRedoController.AddAndExecute(new CommandAddClassBox(new ClassBox() , ClassBoxes ));
+            Console.WriteLine(undoRedoController.CanUndo());
         }
         
         // private class MousemMoveClassBox(MouseButtonEventArgs e)
 
-
+            
         private void MouseDownClassBox(MouseButtonEventArgs e) {
             Console.WriteLine("this");
             ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
@@ -81,9 +88,10 @@ namespace TestApp.ViewModel
         private void MouseUpClassBox(MouseButtonEventArgs e) {
 
             ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
-            Console.WriteLine("SPARTA");
             var mousePosition = RelativeMousePosition(e);
 
+            undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
+             
             e.MouseDevice.Target.ReleaseMouseCapture();
         }
 

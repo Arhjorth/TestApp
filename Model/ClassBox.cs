@@ -8,7 +8,8 @@ namespace TestApp.Model {
     public class ClassBox : ViewModelBase {
         public ClassBox() {
         }
-        public double Height { get; } = 100;
+
+        public double Height { get; } = 200;
         public double Width { get; } = 100;
 
         private double posX = 100;
@@ -32,6 +33,7 @@ namespace TestApp.Model {
         public double CanvasCenterX {
             get { return PosX + Height / 2; }
         }
+
         public double CanvasCenterY {
             get { return PosY + Width / 2; }
         }
@@ -41,7 +43,7 @@ namespace TestApp.Model {
         public Point ConnectRight { get { return new Point(PosX + Width, PosY + Height / 2); } }
         public Point ConnectBottom { get { return new Point(PosX + Width / 2, PosY + Height); } }
 
-        public Brush SelectedColor => IsSelected ? Brushes.Orchid : Brushes.OrangeRed;
+        public Brush SelectedColor => IsSelected ? Brushes.Orchid : Brushes.White;
 
         public bool IsSelected { get; set; }
     }

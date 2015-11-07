@@ -7,12 +7,17 @@
              xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
              xmlns:local="clr-namespace:TestApp.View"
              mc:Ignorable="d" 
-             Height="{Binding Height}" Width="{Binding Width}"
+             Height="{Binding Height}" Width="{Binding Width}" 
              d:DesignHeight="100" d:DesignWidth="100">
 
+    <Grid>
 
-    <Ellipse Fill="{Binding SelectedColor}">
-        
+        <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="4"/>
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="4" Height="20" Width="20" Margin="40,88,40,-8" /> <!-- Bottom -->
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="4"  Height="20" Width="20" Margin="88,40,-8,40"/> <!-- Right -->
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="4"  Height="20" Width="20" Margin="40,-8,40,88"/> <!-- Top -->
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="4"  Height="20" Width="20" Margin="-8,40,88,40"/> <!-- Left -->
+
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDown">
                 <cmd:EventToCommand Command="{Binding DataContext.CommandMouseDownClassBox, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
@@ -24,7 +29,7 @@
                 <cmd:EventToCommand Command="{Binding DataContext.CommandMouseUpClassBox, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
-    </Ellipse>
 
+    </Grid>
 
 </UserControl>

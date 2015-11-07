@@ -14,6 +14,11 @@
     <Window.DataContext>
         <ViewModel:MainViewModel />
     </Window.DataContext>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding CommandUndo}" Gesture="CTRL+Z"/>
+        <KeyBinding Command="{Binding CommandRedo}" Gesture="CTRL+R"/>
+    </Window.InputBindings>
     
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
@@ -27,10 +32,10 @@
               <MenuItem Header="_ZoomOut"/>
             </MenuItem> -->
             <MenuItem Header="Edit" BorderBrush="Black">
-              <MenuItem Header="_Add"/>
+              <MenuItem Header="_Add" Command="{Binding CommandAddClassBox}"/>
               <MenuItem Header="_Remove"/>
-              <MenuItem Header="_Undo"/>
-              <MenuItem Header="_Redo"/>
+              <MenuItem Header="_Undo" Command="{Binding CommandUndo}"/>
+              <MenuItem Header="_Redo" Command="{Binding CommandRedo}"/>
             </MenuItem>
         </Menu>
 

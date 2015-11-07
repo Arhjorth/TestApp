@@ -23,28 +23,29 @@ namespace TestApp.UndoRedo {
             command.Execute();
         }
 
+        public void Add(IUndoRedoCommand command) {
+            undoStack.Push(command);
+            redoStack.Clear();
+        }
 
         public bool CanUndo() => undoStack.Any();
+        public bool CanRedo() => redoStack.Any();
 
         public void Undo() {
             if (!undoStack.Any()) throw new InvalidOperationException();
-
-            var command = undoStack.Pop();
+            IUndoRedoCommand command = undoStack.Pop();
             redoStack.Push(command);
             command.UnExecute();
         }
 
-
-        public bool CanRedo() => redoStack.Any();
-
         public void Redo() {
             if (!redoStack.Any()) throw new InvalidOperationException();
-
-            var command = redoStack.Pop();
+            IUndoRedoCommand command = redoStack.Pop();
             undoStack.Push(command);
             command.Execute();
         }
     }
+
     public interface IUndoRedoCommand {
         void Execute();
         void UnExecute();
