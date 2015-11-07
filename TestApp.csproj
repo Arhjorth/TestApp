@@ -88,7 +88,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\ClassBox.cs" />
+    <Compile Include="UndoRedo\CommandAddClassBox.cs" />
+    <Compile Include="UndoRedo\UndoRedoController.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\NotifyBase.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\ClassBoxUserControl.xaml.cs">
       <DependentUpon>ClassBoxUserControl.xaml</DependentUpon>

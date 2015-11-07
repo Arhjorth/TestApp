@@ -7,6 +7,7 @@ using TestApp.Model;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System;
+using TestApp.UndoRedo;
 
 namespace TestApp.ViewModel
 {
@@ -18,6 +19,8 @@ namespace TestApp.ViewModel
         public ICommand CommandMouseUpClassBox { get; }
         public ICommand CommandMouseDownClassBox { get; }
         public ICommand CommandMouseMoveClassBox { get; }
+        public ICommand MouseMoveShapeCommand { get; }
+        public UndoRedoController undoRedoController = UndoRedoController.Instance;
 
         // Saves the initial point that the mouse has during a move operation.
         private Point initialMousePosition;
@@ -33,14 +36,19 @@ namespace TestApp.ViewModel
             CommandMouseMoveClassBox = new RelayCommand<MouseEventArgs>(MouseMoveClassBox);
             CommandMouseUpClassBox = new RelayCommand<MouseButtonEventArgs>(MouseUpClassBox);
 
+          //  CommandMouseMoveClassbox = new RelayCommand<MouseButtonEventArgs>(MousemMoveClassBox);
+
         }
 
         private void AddClassBox() {
-            ClassBoxes.Add(new ClassBox());
+            undoRedoController.AddAndExecute(new CommandAddClassBox(new ClassBox() , ClassBoxes ));
         }
+        
+        // private class MousemMoveClassBox(MouseButtonEventArgs e)
+
 
         private void MouseDownClassBox(MouseButtonEventArgs e) {
-
+            Console.WriteLine("this");
             ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
             var mousePosition = RelativeMousePosition(e);
@@ -55,7 +63,7 @@ namespace TestApp.ViewModel
 
         private void MouseMoveClassBox(MouseEventArgs e) {
             if (Mouse.Captured != null) {
-
+                Console.WriteLine("is");
                 ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
 
@@ -63,17 +71,18 @@ namespace TestApp.ViewModel
 
                 selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
                 selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+
+                
+
+                Console.WriteLine(selectedBox.PosX+" "+selectedBox.PosY);
             }
         }
 
         private void MouseUpClassBox(MouseButtonEventArgs e) {
 
             ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
-
+            Console.WriteLine("SPARTA");
             var mousePosition = RelativeMousePosition(e);
-
-            selectedBox.PosX = initialClassBoxPosition.X;
-            selectedBox.PosY = initialClassBoxPosition.Y;
 
             e.MouseDevice.Target.ReleaseMouseCapture();
         }

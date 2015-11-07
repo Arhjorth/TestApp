@@ -41,11 +41,11 @@
 
         </StackPanel>
         <Border BorderBrush="Black" BorderThickness="1">
-
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding ClassBoxes}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas>
+                        <Canvas ClipToBounds="True">
                         </Canvas>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
@@ -61,7 +61,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
+            </ScrollViewer>
         </Border>
 
 
