@@ -64,7 +64,7 @@ namespace TestApp.Model {
         public Point ConnectLeft { get {
                 connectLeft.X = PosX;
                 connectLeft.Y = PosY + Height / 2;
-                return connectTop;
+                return connectLeft;
             } }
 
         public Point ConnectRight { get {

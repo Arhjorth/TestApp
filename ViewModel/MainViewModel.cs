@@ -95,7 +95,7 @@ namespace TestApp.ViewModel
                 selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
                 selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
                 
-                Console.WriteLine(selectedBox.PosX+" "+selectedBox.PosY);
+                Console.WriteLine(" X:" +selectedBox.PosX+" Y: "+selectedBox.PosY);
             }
         }
 
@@ -133,30 +133,28 @@ namespace TestApp.ViewModel
         private Point[] calculateConnectionPoints(ClassBox addingLineFrom, ClassBox selectedBox) {
             Point[] potList = new Point[] { addingLineFrom.ConnectTop, addingLineFrom.ConnectRight, addingLineFrom.ConnectBottom, addingLineFrom.ConnectLeft };
             Point[] potList0 = new Point[] { selectedBox.ConnectTop, selectedBox.ConnectRight, selectedBox.ConnectBottom, selectedBox.ConnectLeft };
+            
+            double dis = double.MaxValue;
+            Point[] points = new Point[2];
+            int list1 = 0;
+            int list2 = 0;
 
-            Point pota = new Point();
-            Point potb = new Point();
-            
-            double dis = 999999.0;
-            
             foreach (Point pot in potList) {
+                list2 = 0;
                 foreach (Point pot0 in potList0) {
-                    Console.WriteLine("I MADE CALC.     #############3");
+                    
                     if (distance(pot.X, pot.Y, pot0.X, pot0.Y) < dis) {
-                        pota.X = pot.X;
-                        pota.Y = pot.Y;
-                        potb.X = pot0.X;
-                        potb.Y = pot0.Y;
-
+                        points[0] = potList[list1];
+                        points[1] = potList0[list2];
                         dis = distance(pot.X, pot.Y, pot0.X, pot0.Y);
                         Console.WriteLine("DISTANCE :" + dis);
 
                     }
+                    list2++;
                 }
+                list1++;
             }
-            Point[] points = new Point[] { pota, potb };
             return points;
-
         }
 
         private double distance(double x1, double y1, double x2, double y2) {
