@@ -24,8 +24,8 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="File" BorderBrush="Black">
-              <MenuItem Header="_Open"/>
-              <MenuItem Header="_Save"/>
+                <MenuItem Header="_Open" Command="{ Binding CommandLoad }"/>
+              <MenuItem Header="_Save" Command="{ Binding CommandSave }"/>
             </MenuItem>
             <!-- TODO: Nice to have feature
             <MenuItem Header="View" BorderBrush="Black">

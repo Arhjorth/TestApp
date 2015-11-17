@@ -9,14 +9,8 @@ using System.Windows;
 namespace TestApp.Model {
     public class Line : ViewModelBase {
 
-        private Point fromBox;
-        private Point toBox;
-        
-        public Line(Point fromBox, Point toBox) {
-            FromBox = fromBox;
-            ToBox = toBox;
-        }
-        
+        public Point fromBox;
+        public Point toBox;     
         
         public Point FromBox { get { return fromBox; } set { fromBox = value; RaisePropertyChanged(); } }
 

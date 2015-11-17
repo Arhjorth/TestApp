@@ -8,6 +8,10 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System;
 using TestApp.UndoRedo;
+using TestApp.View;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Win32;
 
 namespace TestApp.ViewModel
 {
@@ -25,6 +29,8 @@ namespace TestApp.ViewModel
         public ICommand MouseMoveShapeCommand { get; }
         public ICommand CommandUndo { get; }
         public ICommand CommandRedo { get; }
+        public ICommand CommandLoad { get; }
+        public ICommand CommandSave { get; }
 
         public UndoRedoController undoRedoController = UndoRedoController.Instance;
 
@@ -37,6 +43,8 @@ namespace TestApp.ViewModel
 
         private ClassBox addingLineFrom;
 
+        public DialogViews dialogs { get; set; }
+
         public MainViewModel()
         {
             ClassBoxes = new ObservableCollection<ClassBox>();
@@ -47,6 +55,8 @@ namespace TestApp.ViewModel
             CommandMouseDownClassBox = new RelayCommand<MouseButtonEventArgs>(MouseDownClassBox);
             CommandMouseMoveClassBox = new RelayCommand<MouseEventArgs>(MouseMoveClassBox);
             CommandMouseUpClassBox = new RelayCommand<MouseButtonEventArgs>(MouseUpClassBox);
+            CommandSave = new RelayCommand(SaveDiagram);
+            CommandLoad = new RelayCommand(LoadDiagram);
 
             CommandUndo = new RelayCommand(undoRedoController.Undo/*, undoRedoController.CanUndo*/); //TODO: Fix dis!
             CommandRedo = new RelayCommand(undoRedoController.Redo/*, undoRedoController.CanRedo*/);
@@ -112,7 +122,7 @@ namespace TestApp.ViewModel
                 else if (addingLineFrom != selectedBox) {
 
                     Point[] connectionPoints =  calculateConnectionPoints(addingLineFrom, selectedBox);
-                    undoRedoController.AddAndExecute(new CommandAddLine(new Line(connectionPoints[0], connectionPoints[1]), Lines));
+                    undoRedoController.AddAndExecute(new CommandAddLine(new Line() { fromBox = connectionPoints[0] , toBox = connectionPoints[1] }, Lines));
                     Console.WriteLine(" LINES : " + Lines.Count);
                     addingLineFrom.IsSelected = false;
 
@@ -178,7 +188,52 @@ namespace TestApp.ViewModel
             return parent.GetType().IsAssignableFrom(typeof(T)) ? parent : FindParentOfType<T>(parent);
         }
 
+       SaveFileDialog saveDialog = new SaveFileDialog() { Title = "Save Diagram", Filter = "XML Document (.xml)|*.xml", DefaultExt = "xml", InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
+       OpenFileDialog openDialog = new OpenFileDialog() { Title = "Open Diagram", Filter = "XML Document (.xml)|*.xml", DefaultExt = "xml", InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), CheckFileExists = true };
 
+        private void NewDiagram() {
+            if (dialogs.ShowNew()) {
+                ClassBoxes.Clear();
+                Lines.Clear();
+            }
+        }
+
+        private void SaveDiagram() {
+            string path = null;
+            if (saveDialog.ShowDialog() == true) {
+                path = saveDialog.FileName;
+            }
+
+            var ClassBoxList = new List<ClassBox>(ClassBoxes);
+            var LinesList = new List<Line>(Lines);
+
+            if (path != null) {
+                Diagram diagram = new Diagram() { Lines = LinesList, ClassBoxes = ClassBoxList };
+                ControllerLoadSave.Instance.Save(diagram, path);
+            }
+        }
+
+        private async void LoadDiagram() {
+            string path = null;
+
+            if (openDialog.ShowDialog() == true) {
+                path = openDialog.FileName;
+            }
+
+            if (path != null) {
+                Diagram diagram = await ControllerLoadSave.Instance.load(path);
+
+                ClassBoxes.Clear();
+                Lines.Clear();
+
+                foreach(Line line in diagram.Lines) {
+                    Lines.Add(line);
+                }
+                foreach(ClassBox box in diagram.ClassBoxes) {
+                    ClassBoxes.Add(box);
+                }
+            }
+        }
 
     }
 }

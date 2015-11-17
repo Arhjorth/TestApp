@@ -91,7 +91,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LoadSave\ControllerLoadSave.cs" />
     <Compile Include="Model\ClassBox.cs" />
+    <Compile Include="Model\Diagram.cs" />
     <Compile Include="Model\Line.cs" />
     <Compile Include="UndoRedo\CommandAddClassBox.cs" />
     <Compile Include="UndoRedo\CommandAddLine.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="View\ClassBoxUserControl.xaml.cs">
       <DependentUpon>ClassBoxUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\DialogViews.cs" />
     <Compile Include="View\LineUserControl.xaml.cs">
       <DependentUpon>LineUserControl.xaml</DependentUpon>
     </Compile>
