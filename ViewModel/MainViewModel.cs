@@ -94,9 +94,7 @@ namespace TestApp.ViewModel
 
                 selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
                 selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
-
                 
-
                 Console.WriteLine(selectedBox.PosX+" "+selectedBox.PosY);
             }
         }
@@ -113,8 +111,9 @@ namespace TestApp.ViewModel
                 }
                 else if (addingLineFrom != selectedBox) {
 
-                    undoRedoController.AddAndExecute(new CommandAddLine(new Line(addingLineFrom, selectedBox), Lines));
-
+                    Point[] connectionPoints =  calculateConnectionPoints(addingLineFrom, selectedBox);
+                    undoRedoController.AddAndExecute(new CommandAddLine(new Line(connectionPoints[0], connectionPoints[1]), Lines));
+                    Console.WriteLine(" LINES : " + Lines.Count);
                     addingLineFrom.IsSelected = false;
 
                     isAddingLine = false;
@@ -130,6 +129,39 @@ namespace TestApp.ViewModel
             e.MouseDevice.Target.ReleaseMouseCapture();
          }
        }
+
+        private Point[] calculateConnectionPoints(ClassBox addingLineFrom, ClassBox selectedBox) {
+            Point[] potList = new Point[] { addingLineFrom.ConnectTop, addingLineFrom.ConnectRight, addingLineFrom.ConnectBottom, addingLineFrom.ConnectLeft };
+            Point[] potList0 = new Point[] { selectedBox.ConnectTop, selectedBox.ConnectRight, selectedBox.ConnectBottom, selectedBox.ConnectLeft };
+
+            Point pota = new Point();
+            Point potb = new Point();
+            
+            double dis = 999999.0;
+            
+            foreach (Point pot in potList) {
+                foreach (Point pot0 in potList0) {
+                    Console.WriteLine("I MADE CALC.     #############3");
+                    if (distance(pot.X, pot.Y, pot0.X, pot0.Y) < dis) {
+                        pota.X = pot.X;
+                        pota.Y = pot.Y;
+                        potb.X = pot0.X;
+                        potb.Y = pot0.Y;
+
+                        dis = distance(pot.X, pot.Y, pot0.X, pot0.Y);
+                        Console.WriteLine("DISTANCE :" + dis);
+
+                    }
+                }
+            }
+            Point[] points = new Point[] { pota, potb };
+            return points;
+
+        }
+
+        private double distance(double x1, double y1, double x2, double y2) {
+            return Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))); 
+        }
 
         // Gets the mouse position relative to the canvas.
         private Point RelativeMousePosition(MouseEventArgs e) {

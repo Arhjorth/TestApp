@@ -21,7 +21,12 @@ namespace TestApp.Model {
             set {
                 posX = value;
                 RaisePropertyChanged();
-                }
+                RaisePropertyChanged(nameof(CanvasCenterX));
+                RaisePropertyChanged(nameof(ConnectTop));
+                RaisePropertyChanged(nameof(ConnectBottom));
+                RaisePropertyChanged(nameof(ConnectLeft));
+                RaisePropertyChanged(nameof(ConnectRight));
+            }
         }
         private double posY = 100;
         public double PosY {
@@ -29,6 +34,12 @@ namespace TestApp.Model {
             set {
                 posY = value;
                 RaisePropertyChanged();
+                RaisePropertyChanged(nameof(CanvasCenterY));
+                RaisePropertyChanged(nameof(ConnectTop));
+                RaisePropertyChanged(nameof(ConnectBottom));
+                RaisePropertyChanged(nameof(ConnectLeft));
+                RaisePropertyChanged(nameof(ConnectRight));
+
             }
         }
 
@@ -39,13 +50,36 @@ namespace TestApp.Model {
         public double CanvasCenterY {
             get { return PosY + Width / 2; }
         }
+        private Point connectTop;
+        private Point connectLeft;
+        private Point connectRight;
+        private Point connectBottom;
 
-        public Point ConnectTop { get { return new Point(PosX + Width / 2, PosY); } }
-        public Point ConnectLeft { get { return new Point(PosX, PosY + Height / 2); } }
-        public Point ConnectRight { get { return new Point(PosX + Width, PosY + Height / 2); } }
-        public Point ConnectBottom { get { return new Point(PosX + Width / 2, PosY + Height); } }
+        public Point ConnectTop { get {
+                connectTop.X = PosX + Width / 2;
+                connectTop.Y = PosY;
+                return connectTop;
+            } }
+
+        public Point ConnectLeft { get {
+                connectLeft.X = PosX;
+                connectLeft.Y = PosY + Height / 2;
+                return connectTop;
+            } }
+
+        public Point ConnectRight { get {
+                connectRight.X = PosX + Width;
+                connectRight.Y =  PosY + Height / 2;
+                return connectRight;
+            } }
+        public Point ConnectBottom { get {
+                connectBottom.X = PosX + Width / 2;
+                connectBottom.Y = PosY + Height;
+                return connectBottom;
+            } }
 
         public Brush SelectedColor => IsSelected ? Brushes.Orchid : Brushes.White;
+        
 
         public bool IsSelected { get; set; }
     }

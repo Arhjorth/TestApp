@@ -9,18 +9,18 @@ using System.Windows;
 namespace TestApp.Model {
     public class Line : ViewModelBase {
 
-        private ClassBox fromBox;
-        private ClassBox toBox;
+        private Point fromBox;
+        private Point toBox;
         
-        public Line(ClassBox fromBox, ClassBox toBox) {
+        public Line(Point fromBox, Point toBox) {
             FromBox = fromBox;
             ToBox = toBox;
         }
         
         
-        public ClassBox FromBox { get { return fromBox; } set { fromBox = value; RaisePropertyChanged(); } }
+        public Point FromBox { get { return fromBox; } set { fromBox = value; RaisePropertyChanged(); } }
 
-        public ClassBox ToBox { get { return toBox; } set { toBox = value; RaisePropertyChanged(); } }
+        public Point ToBox { get { return toBox; } set { toBox = value; RaisePropertyChanged(); } }
         
     }
 }
