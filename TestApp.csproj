@@ -79,6 +79,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\LineUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,7 +92,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\ClassBox.cs" />
+    <Compile Include="Model\Line.cs" />
     <Compile Include="UndoRedo\CommandAddClassBox.cs" />
+    <Compile Include="UndoRedo\CommandAddLine.cs" />
     <Compile Include="UndoRedo\CommandMoveClassBox.cs" />
     <Compile Include="UndoRedo\UndoRedoController.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -96,6 +102,9 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\ClassBoxUserControl.xaml.cs">
       <DependentUpon>ClassBoxUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LineUserControl.xaml.cs">
+      <DependentUpon>LineUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

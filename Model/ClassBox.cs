@@ -9,7 +9,9 @@ namespace TestApp.Model {
         public ClassBox() {
         }
 
-        public double Height { get; } = 200;
+        public int Number { get; }
+
+        public double Height { get; } = 100;
         public double Width { get; } = 100;
 
         private double posX = 100;

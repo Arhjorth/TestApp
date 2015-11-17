@@ -15,7 +15,10 @@ namespace TestApp.ViewModel
     public class MainViewModel : ViewModelBase
     {   
         public ObservableCollection<ClassBox> ClassBoxes { get; set; }
+        public ObservableCollection<Line> Lines { get; set; }
+
         public ICommand CommandAddClassBox { get; }
+        public ICommand CommandAddLine { get; }
         public ICommand CommandMouseUpClassBox { get; }
         public ICommand CommandMouseDownClassBox { get; }
         public ICommand CommandMouseMoveClassBox { get; }
@@ -30,11 +33,17 @@ namespace TestApp.ViewModel
         // Saves the initial point that the shape has during a move operation.
         private Point initialClassBoxPosition;
 
+        private bool isAddingLine;
+
+        private ClassBox addingLineFrom;
+
         public MainViewModel()
         {
             ClassBoxes = new ObservableCollection<ClassBox>();
+            Lines = new ObservableCollection<Line>();
 
             CommandAddClassBox = new RelayCommand(AddClassBox);
+            CommandAddLine = new RelayCommand(AddLine);
             CommandMouseDownClassBox = new RelayCommand<MouseButtonEventArgs>(MouseDownClassBox);
             CommandMouseMoveClassBox = new RelayCommand<MouseEventArgs>(MouseMoveClassBox);
             CommandMouseUpClassBox = new RelayCommand<MouseButtonEventArgs>(MouseUpClassBox);
@@ -50,11 +59,17 @@ namespace TestApp.ViewModel
             undoRedoController.AddAndExecute(new CommandAddClassBox(new ClassBox() , ClassBoxes ));
             Console.WriteLine(undoRedoController.CanUndo());
         }
+
+        private void AddLine() {
+            isAddingLine = true;
+
+        }
         
         // private class MousemMoveClassBox(MouseButtonEventArgs e)
 
             
         private void MouseDownClassBox(MouseButtonEventArgs e) {
+            if (!isAddingLine) { 
             Console.WriteLine("this");
             ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
@@ -66,6 +81,7 @@ namespace TestApp.ViewModel
             // The mouse is captured, so the current shape will always be the target of the mouse events, 
             //  even if the mouse is outside the application window.
             e.MouseDevice.Target.CaptureMouse();
+            }
         }
 
         private void MouseMoveClassBox(MouseEventArgs e) {
@@ -87,13 +103,32 @@ namespace TestApp.ViewModel
 
         private void MouseUpClassBox(MouseButtonEventArgs e) {
 
+            // Used for adding a Line.
+            if (isAddingLine) {
+                ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
+
+                if (addingLineFrom == null) {
+                    addingLineFrom = selectedBox;
+                    addingLineFrom.IsSelected = true;
+                }
+                else if (addingLineFrom != selectedBox) {
+
+                    new CommandAddLine(Lines, new Line() { FromBox = addingLineFrom, ToBox = selectedBox });
+                    addingLineFrom.IsSelected = false;
+
+                    isAddingLine = false;
+                    addingLineFrom = null;
+                    
+                    
+                }
+            } else{
+
             ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
             var mousePosition = RelativeMousePosition(e);
-
             undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
-             
             e.MouseDevice.Target.ReleaseMouseCapture();
-        }
+         }
+       }
 
         // Gets the mouse position relative to the canvas.
         private Point RelativeMousePosition(MouseEventArgs e) {

@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestApp"
         xmlns:ViewModel="clr-namespace:TestApp.ViewModel"
+        xmlns:Model="clr-namespace:TestApp.Model"
         xmlns:View="clr-namespace:TestApp.View"
         mc:Ignorable="d"
         Title="MainWindow" Height="400" Width="600">
@@ -40,38 +41,60 @@
         </Menu>
 
         <StackPanel Width="150" >
-            <Button x:Name="buttonAddClass" Content="AddClass" Command="{Binding CommandAddClassBox}" />
-
+            <Button x:Name="buttonAddClass" Content="Add Class" Command="{Binding CommandAddClassBox}" />
+            <Button x:Name="buttonAddLine" Content="Add Line" Command="{Binding CommandAddLine}"/>
             <!-- <Image Source="%PathToImage%"></Image> -->
-
         </StackPanel>
+
+
+       
+        <!-- Then Paint Classboxes-->
         <Border BorderBrush="Black" BorderThickness="1">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding ClassBoxes}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas ClipToBounds="True">
-                        </Canvas>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerStyle>
-                    <Style TargetType="ContentPresenter">
-                        <Setter Property="Canvas.Left" Value="{Binding PosX}"/>
-                        <Setter Property="Canvas.Top" Value="{Binding PosY}"/>
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <View:ClassBoxUserControl/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            </ScrollViewer>
+            <Grid>
+                <!-- DRAWING LINES ON ALICEBLUE CANVAS --> 
+                <ItemsControl ItemsSource="{Binding Lines}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas ClipToBounds="True" Background="AliceBlue">
+                            </Canvas>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding PosX}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding PosY}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <View:LineUserControl/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                
+                    <!-- DRAWING CLASSBOXES ON TRANSPARENT CANVAS-->
+                <ItemsControl ItemsSource="{Binding ClassBoxes}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas ClipToBounds="True" Background="Red">
+                            </Canvas>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Left" Value="{Binding PosX}"/>
+                            <Setter Property="Canvas.Top" Value="{Binding PosY}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <View:ClassBoxUserControl/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </Border>
-
-
-
-    </DockPanel>
+     </DockPanel>
 
 
 
