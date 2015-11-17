@@ -8,9 +8,15 @@ using System.Windows;
 
 namespace TestApp.Model {
     public class Line : ViewModelBase {
-        
+
         private ClassBox fromBox;
-        private ClassBox toBox; 
+        private ClassBox toBox;
+        
+        public Line(ClassBox fromBox, ClassBox toBox) {
+            FromBox = fromBox;
+            ToBox = toBox;
+        }
+        
         
         public ClassBox FromBox { get { return fromBox; } set { fromBox = value; RaisePropertyChanged(); } }
 

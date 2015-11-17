@@ -113,7 +113,8 @@ namespace TestApp.ViewModel
                 }
                 else if (addingLineFrom != selectedBox) {
 
-                    new CommandAddLine(Lines, new Line() { FromBox = addingLineFrom, ToBox = selectedBox });
+                    undoRedoController.AddAndExecute(new CommandAddLine(new Line(addingLineFrom, selectedBox), Lines));
+
                     addingLineFrom.IsSelected = false;
 
                     isAddingLine = false;

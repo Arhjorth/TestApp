@@ -13,7 +13,7 @@ namespace TestApp.UndoRedo {
         private Line line;
 
 
-        public CommandAddLine(ObservableCollection<Line> lines, Line line) {
+        public CommandAddLine(Line line, ObservableCollection<Line> lines) {
             this.lines = lines;
             this.line = line;
         }
