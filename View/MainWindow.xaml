@@ -23,7 +23,7 @@
     
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
-            <MenuItem Header="File" BorderBrush="Black">
+            <MenuItem Header="File">
                 <MenuItem Header="_Open" Command="{ Binding CommandLoad }"/>
               <MenuItem Header="_Save" Command="{ Binding CommandSave }"/>
             </MenuItem>
@@ -32,7 +32,7 @@
               <MenuItem Header="_ZoomIn"/>
               <MenuItem Header="_ZoomOut"/>
             </MenuItem> -->
-            <MenuItem Header="Edit" BorderBrush="Black">
+            <MenuItem Header="Edit">
               <MenuItem Header="_Add" Command="{Binding CommandAddClassBox}"/>
               <MenuItem Header="_Remove"/>
               <MenuItem Header="_Undo" Command="{Binding CommandUndo}"/>
@@ -70,8 +70,10 @@
                 <ItemsControl ItemsSource="{Binding ClassBoxes}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas ClipToBounds="True" Background="Transparent">
-                            </Canvas>
+                            <ScrollViewer Height="100" Width="200" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                <Canvas ClipToBounds="True" Background="Transparent">
+                                </Canvas>
+                            </ScrollViewer>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>

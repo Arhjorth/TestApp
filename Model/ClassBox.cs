@@ -12,9 +12,9 @@ namespace TestApp.Model {
         public int Number { get; }
 
         public double Height { get; } = 100;
-        public double Width { get; } = 100;
+        public double Width { get; } = 75;
 
-        private double posX = 100;
+        private double posX = 10;
 
         public double PosX {
             get { return posX; }
@@ -28,7 +28,7 @@ namespace TestApp.Model {
                 RaisePropertyChanged(nameof(ConnectRight));
             }
         }
-        private double posY = 100;
+        private double posY = 10;
         public double PosY {
             get { return posY; }
             set {

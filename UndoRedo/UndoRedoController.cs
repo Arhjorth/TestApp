@@ -28,8 +28,12 @@ namespace TestApp.UndoRedo {
             redoStack.Clear();
         }
 
-        public bool CanUndo() => undoStack.Any();
-        public bool CanRedo() => redoStack.Any();
+        public bool CanUndo() {
+            return undoStack.Any();
+        }
+        public bool CanRedo() {
+            return redoStack.Any();
+        }
 
         public void Undo() {
             if (!undoStack.Any()) throw new InvalidOperationException();

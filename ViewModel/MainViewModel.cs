@@ -24,7 +24,7 @@ namespace TestApp.ViewModel
         public ICommand CommandAddClassBox { get; }
         public ICommand CommandAddLine { get; }
         public ICommand CommandMouseUpClassBox { get; }
-        public ICommand CommandMouseDownClassBox { get; }
+        public ICommand CommandMouseDownClassBox { get; } 
         public ICommand CommandMouseMoveClassBox { get; }
         public ICommand MouseMoveShapeCommand { get; }
         public ICommand CommandUndo { get; }
@@ -99,13 +99,12 @@ namespace TestApp.ViewModel
                 Console.WriteLine("is");
                 ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
-
                 var mousePosition = RelativeMousePosition(e);
 
                 selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
                 selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
                 
-                Console.WriteLine(selectedBox.PosX+" "+selectedBox.PosY);
+                Console.WriteLine(selectedBox.PosX+" "+selectedBox.PosY+" "+selectedBox.ConnectTop);
             }
         }
 
@@ -164,7 +163,8 @@ namespace TestApp.ViewModel
                     }
                 }
             }
-            Point[] points = new Point[] { pota, potb };
+            Point[] points = new Point[2];
+            points[0] = pota; points[1] = potb;
             return points;
 
         }
@@ -188,8 +188,10 @@ namespace TestApp.ViewModel
             return parent.GetType().IsAssignableFrom(typeof(T)) ? parent : FindParentOfType<T>(parent);
         }
 
-       SaveFileDialog saveDialog = new SaveFileDialog() { Title = "Save Diagram", Filter = "XML Document (.xml)|*.xml", DefaultExt = "xml", InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
-       OpenFileDialog openDialog = new OpenFileDialog() { Title = "Open Diagram", Filter = "XML Document (.xml)|*.xml", DefaultExt = "xml", InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), CheckFileExists = true };
+       SaveFileDialog saveDialog = 
+            new SaveFileDialog() { Title = "Save Diagram", Filter = "XML Document (.xml)|*.xml", DefaultExt = "xml", InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
+       OpenFileDialog openDialog = 
+            new OpenFileDialog() { Title = "Open Diagram", Filter = "XML Document (.xml)|*.xml", DefaultExt = "xml", InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), CheckFileExists = true };
 
         private void NewDiagram() {
             if (dialogs.ShowNew()) {

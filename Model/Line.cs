@@ -12,9 +12,21 @@ namespace TestApp.Model {
         public Point fromBox;
         public Point toBox;     
         
-        public Point FromBox { get { return fromBox; } set { fromBox = value; RaisePropertyChanged(); } }
+        public Point FromBox {
+            get { return fromBox; }
+            set {
+                fromBox = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public Point ToBox { get { return toBox; } set { toBox = value; RaisePropertyChanged(); } }
+        public Point ToBox {
+            get { return toBox; }
+            set {
+                toBox = value;
+                RaisePropertyChanged();
+            }
+        }
         
     }
 }
