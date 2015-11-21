@@ -3,18 +3,19 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using System.Collections;
 
 namespace TestApp.Model {
     public class ClassBox : ViewModelBase {
         public ClassBox() {
         }
 
-        public int Number { get; }
+
 
         public double Height { get; } = 100;
-        public double Width { get; } = 75;
+        public double Width { get; } = 100;
 
-        private double posX = 10;
+        private double posX = 100;
 
         public double PosX {
             get { return posX; }
@@ -26,9 +27,10 @@ namespace TestApp.Model {
                 RaisePropertyChanged(nameof(ConnectBottom));
                 RaisePropertyChanged(nameof(ConnectLeft));
                 RaisePropertyChanged(nameof(ConnectRight));
+                raiseLinePropertyChanged();
             }
         }
-        private double posY = 10;
+        private double posY = 100;
         public double PosY {
             get { return posY; }
             set {
@@ -39,9 +41,13 @@ namespace TestApp.Model {
                 RaisePropertyChanged(nameof(ConnectBottom));
                 RaisePropertyChanged(nameof(ConnectLeft));
                 RaisePropertyChanged(nameof(ConnectRight));
-
+                raiseLinePropertyChanged();
             }
         }
+
+        private ArrayList lineList = new ArrayList();
+
+        public ArrayList LineList { get { return lineList; } }
 
         public double CanvasCenterX {
             get { return PosX + Height / 2; }
@@ -55,32 +61,68 @@ namespace TestApp.Model {
         private Point connectRight;
         private Point connectBottom;
 
-        public Point ConnectTop { get {
+        public Point ConnectTop {
+            get {
                 connectTop.X = PosX + Width / 2;
                 connectTop.Y = PosY;
+                RaisePropertyChanged();
                 return connectTop;
-            } }
+            }
+        }
 
-        public Point ConnectLeft { get {
+        public Point ConnectLeft {
+            get {
                 connectLeft.X = PosX;
                 connectLeft.Y = PosY + Height / 2;
-                return connectTop;
-            } }
+                RaisePropertyChanged();
+                return connectLeft;
+            }
+        }
 
-        public Point ConnectRight { get {
+        public Point ConnectRight {
+            get {
                 connectRight.X = PosX + Width;
-                connectRight.Y =  PosY + Height / 2;
+                connectRight.Y = PosY + Height / 2;
+                RaisePropertyChanged();
                 return connectRight;
-            } }
-        public Point ConnectBottom { get {
+            }
+        }
+        public Point ConnectBottom {
+            get {
                 connectBottom.X = PosX + Width / 2;
                 connectBottom.Y = PosY + Height;
+                RaisePropertyChanged();
                 return connectBottom;
-            } }
+            }
+        }
+
+        public Point getPoint( int v1) {
+
+            switch (v1) {
+                case 0:
+                    return ConnectTop;
+                case 1:
+                    return ConnectRight;
+                case 2:
+                    return ConnectBottom;
+                case 3:
+                    return ConnectLeft;
+                default:
+                    return new Point();   
+            }
+        }
 
         public Brush SelectedColor => IsSelected ? Brushes.Orchid : Brushes.White;
-        
+
 
         public bool IsSelected { get; set; }
+
+        public void raiseLinePropertyChanged() {
+            foreach (Line line in LineList) {
+                line.raisePropertyChanged();
+            }
+        }
     }
+
+
 }

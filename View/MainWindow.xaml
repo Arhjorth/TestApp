@@ -20,12 +20,12 @@
         <KeyBinding Command="{Binding CommandUndo}" Gesture="CTRL+Z"/>
         <KeyBinding Command="{Binding CommandRedo}" Gesture="CTRL+R"/>
     </Window.InputBindings>
-    
+
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="File">
                 <MenuItem Header="_Open" Command="{ Binding CommandLoad }"/>
-              <MenuItem Header="_Save" Command="{ Binding CommandSave }"/>
+                <MenuItem Header="_Save" Command="{ Binding CommandSave }"/>
             </MenuItem>
             <!-- TODO: Nice to have feature
             <MenuItem Header="View" BorderBrush="Black">
@@ -33,10 +33,10 @@
               <MenuItem Header="_ZoomOut"/>
             </MenuItem> -->
             <MenuItem Header="Edit">
-              <MenuItem Header="_Add" Command="{Binding CommandAddClassBox}"/>
-              <MenuItem Header="_Remove"/>
-              <MenuItem Header="_Undo" Command="{Binding CommandUndo}"/>
-              <MenuItem Header="_Redo" Command="{Binding CommandRedo}"/>
+                <MenuItem Header="_Add" Command="{Binding CommandAddClassBox}"/>
+                <MenuItem Header="_Remove"/>
+                <MenuItem Header="_Undo" Command="{Binding CommandUndo}"/>
+                <MenuItem Header="_Redo" Command="{Binding CommandRedo}"/>
             </MenuItem>
         </Menu>
 
@@ -47,11 +47,11 @@
         </StackPanel>
 
 
-       
+
         <!-- Then Paint Classboxes-->
         <Border BorderBrush="Black" BorderThickness="1">
             <Grid>
-                <!-- DRAWING LINES ON ALICEBLUE CANVAS --> 
+                <!-- DRAWING LINES ON ALICEBLUE CANVAS -->
                 <ItemsControl ItemsSource="{Binding Lines}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -65,15 +65,13 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                
-                    <!-- DRAWING CLASSBOXES ON TRANSPARENT CANVAS-->
+
+                <!-- DRAWING CLASSBOXES ON TRANSPARENT CANVAS-->
                 <ItemsControl ItemsSource="{Binding ClassBoxes}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <ScrollViewer Height="100" Width="200" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                <Canvas ClipToBounds="True" Background="Transparent">
-                                </Canvas>
-                            </ScrollViewer>
+                            <Canvas ClipToBounds="True" Background="Transparent">
+                            </Canvas>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>
@@ -90,8 +88,5 @@
                 </ItemsControl>
             </Grid>
         </Border>
-     </DockPanel>
-
-
-
+    </DockPanel>
 </Window>

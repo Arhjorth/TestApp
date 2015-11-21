@@ -117,60 +117,60 @@ namespace TestApp.ViewModel
                 if (addingLineFrom == null) {
                     addingLineFrom = selectedBox;
                     addingLineFrom.IsSelected = true;
-                }
-                else if (addingLineFrom != selectedBox) {
+                } else if (addingLineFrom != selectedBox) {
 
-                    Point[] connectionPoints =  calculateConnectionPoints(addingLineFrom, selectedBox);
-                    undoRedoController.AddAndExecute(new CommandAddLine(new Line() { fromBox = connectionPoints[0] , toBox = connectionPoints[1] }, Lines));
+                    int[] connectionPoints = calculateConnectionPoints(addingLineFrom, selectedBox);
+                    Line newLine = new Line() { fromBox = addingLineFrom, cF = connectionPoints[0], toBox = selectedBox, cT = connectionPoints[1] };
+                    undoRedoController.AddAndExecute(new CommandAddLine(newLine, Lines));
+
+                    //Adding line to classbox arraylist of lines
+                    addingLineFrom.LineList.Add(newLine);
+                    selectedBox.LineList.Add(newLine);
+
                     Console.WriteLine(" LINES : " + Lines.Count);
                     addingLineFrom.IsSelected = false;
 
                     isAddingLine = false;
                     addingLineFrom = null;
-                    
-                    
+
+
                 }
-            } else{
+            } else {
 
-            ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
-            var mousePosition = RelativeMousePosition(e);
-            undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
-            e.MouseDevice.Target.ReleaseMouseCapture();
-         }
-       }
+                ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
+                var mousePosition = RelativeMousePosition(e);
+                undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
+                e.MouseDevice.Target.ReleaseMouseCapture();
+            }
+        }
 
-        private Point[] calculateConnectionPoints(ClassBox addingLineFrom, ClassBox selectedBox) {
+        private int[] calculateConnectionPoints(ClassBox addingLineFrom, ClassBox selectedBox) {
             Point[] potList = new Point[] { addingLineFrom.ConnectTop, addingLineFrom.ConnectRight, addingLineFrom.ConnectBottom, addingLineFrom.ConnectLeft };
             Point[] potList0 = new Point[] { selectedBox.ConnectTop, selectedBox.ConnectRight, selectedBox.ConnectBottom, selectedBox.ConnectLeft };
 
-            Point pota = new Point();
-            Point potb = new Point();
-            
-            double dis = 999999.0;
-            
+            double dis = double.MaxValue;
+            int[] points = new int[2];
+            int list1 = 0;
+            int list2 = 0;
+
             foreach (Point pot in potList) {
+                list2 = 0;
                 foreach (Point pot0 in potList0) {
-                    Console.WriteLine("I MADE CALC.     #############3");
+
                     if (distance(pot.X, pot.Y, pot0.X, pot0.Y) < dis) {
-                        pota.X = pot.X;
-                        pota.Y = pot.Y;
-                        potb.X = pot0.X;
-                        potb.Y = pot0.Y;
-
+                        points[0] = list1;
+                        points[1] = list2;
                         dis = distance(pot.X, pot.Y, pot0.X, pot0.Y);
-                        Console.WriteLine("DISTANCE :" + dis);
-
                     }
+                    list2++;
                 }
+                list1++;
             }
-            Point[] points = new Point[2];
-            points[0] = pota; points[1] = potb;
             return points;
-
         }
 
         private double distance(double x1, double y1, double x2, double y2) {
-            return Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))); 
+            return Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
         }
 
         // Gets the mouse position relative to the canvas.
