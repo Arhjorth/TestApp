@@ -9,18 +9,36 @@ using System.Windows;
 namespace TestApp.Model {
     public class Line : ViewModelBase {
 
-        private Point fromBox;
-        private Point toBox;
-        
-        public Line(Point fromBox, Point toBox) {
-            FromBox = fromBox;
-            ToBox = toBox;
-        }
-        
-        
-        public Point FromBox { get { return fromBox; } set { fromBox = value; RaisePropertyChanged(); } }
+        public ClassBox fromBox;
+        public ClassBox toBox;
+        Point connectFrom;
+        Point connectTo;
+        int cF;
+        int cT;
 
-        public Point ToBox { get { return toBox; } set { toBox = value; RaisePropertyChanged(); } }
-        
+        public Line(ClassBox fromBox, int v1, ClassBox toBox, int v2) {
+            this.fromBox = fromBox;
+            this.toBox = toBox;
+            fromBox.getPoint(ref connectFrom, v1);
+            toBox.getPoint(ref connectTo, v2);
+            cF = v1;
+            cT = v2;
+            
+        }
+
+        public Point ConnectFrom {
+            get { fromBox.getPoint(ref connectFrom, cF); return connectFrom; }
+
+        }
+
+        public Point ConnectTo {
+            get { toBox.getPoint(ref connectTo, cT); return connectTo; }
+        }
+
+        public void raisePropertyChanged() {
+            RaisePropertyChanged(nameof(ConnectFrom));
+            RaisePropertyChanged(nameof(ConnectTo));
+        }
     }
+        
 }

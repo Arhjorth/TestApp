@@ -93,7 +93,7 @@ namespace TestApp.ViewModel
                 var mousePosition = RelativeMousePosition(e);
 
                 selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
-                selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+                selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);               
                 
                 Console.WriteLine(" X:" +selectedBox.PosX+" Y: "+selectedBox.PosY);
             }
@@ -111,8 +111,14 @@ namespace TestApp.ViewModel
                 }
                 else if (addingLineFrom != selectedBox) {
 
-                    Point[] connectionPoints =  calculateConnectionPoints(addingLineFrom, selectedBox);
-                    undoRedoController.AddAndExecute(new CommandAddLine(new Line(connectionPoints[0], connectionPoints[1]), Lines));
+                    int[] connectionPoints =  calculateConnectionPoints(addingLineFrom, selectedBox);
+                    Line newLine = new Line(addingLineFrom, connectionPoints[0], selectedBox, connectionPoints[1]);
+                    undoRedoController.AddAndExecute(new CommandAddLine(newLine, Lines));
+
+                    //Adding line to classbox arraylist of lines
+                    addingLineFrom.LineList.Add(newLine);
+                    selectedBox.LineList.Add(newLine);
+                    
                     Console.WriteLine(" LINES : " + Lines.Count);
                     addingLineFrom.IsSelected = false;
 
@@ -130,12 +136,12 @@ namespace TestApp.ViewModel
          }
        }
 
-        private Point[] calculateConnectionPoints(ClassBox addingLineFrom, ClassBox selectedBox) {
+        private int[] calculateConnectionPoints(ClassBox addingLineFrom, ClassBox selectedBox) {
             Point[] potList = new Point[] { addingLineFrom.ConnectTop, addingLineFrom.ConnectRight, addingLineFrom.ConnectBottom, addingLineFrom.ConnectLeft };
             Point[] potList0 = new Point[] { selectedBox.ConnectTop, selectedBox.ConnectRight, selectedBox.ConnectBottom, selectedBox.ConnectLeft };
             
             double dis = double.MaxValue;
-            Point[] points = new Point[2];
+            int[] points = new int[2];
             int list1 = 0;
             int list2 = 0;
 
@@ -144,11 +150,9 @@ namespace TestApp.ViewModel
                 foreach (Point pot0 in potList0) {
                     
                     if (distance(pot.X, pot.Y, pot0.X, pot0.Y) < dis) {
-                        points[0] = potList[list1];
-                        points[1] = potList0[list2];
+                        points[0] = list1;
+                        points[1] = list2;
                         dis = distance(pot.X, pot.Y, pot0.X, pot0.Y);
-                        Console.WriteLine("DISTANCE :" + dis);
-
                     }
                     list2++;
                 }
