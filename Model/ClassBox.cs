@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Collections;
+using System.Xml.Serialization;
 
 namespace TestApp.Model {
     public class ClassBox : ViewModelBase {
@@ -44,9 +45,10 @@ namespace TestApp.Model {
                 raiseLinePropertyChanged();
             }
         }
-
+        
+        [XmlIgnore]
         private ArrayList lineList = new ArrayList();
-
+        [XmlIgnore]
         public ArrayList LineList { get { return lineList; } }
 
         public double CanvasCenterX {
@@ -96,7 +98,7 @@ namespace TestApp.Model {
             }
         }
 
-        public Point getPoint( int v1) {
+        public Point getPoint(int v1) {
 
             switch (v1) {
                 case 0:
@@ -122,7 +124,10 @@ namespace TestApp.Model {
                 line.raisePropertyChanged();
             }
         }
-    }
 
+        public bool equals(ClassBox fromBox) {
+            return (this.PosX == fromBox.PosX) && (this.PosY == fromBox.PosY);
+        }
+    }
 
 }

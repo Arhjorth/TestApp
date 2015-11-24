@@ -12,6 +12,7 @@ using TestApp.View;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace TestApp.ViewModel
 {
@@ -141,6 +142,13 @@ namespace TestApp.ViewModel
                 var mousePosition = RelativeMousePosition(e);
                 undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
                 e.MouseDevice.Target.ReleaseMouseCapture();
+                
+                foreach(Line line in selectedBox.LineList) {
+                    int[] connectionsPoints = calculateConnectionPoints(line.fromBox, line.toBox);
+                    line.cF = connectionsPoints[0];
+                    line.cT = connectionsPoints[1];
+                    line.raisePropertyChanged();
+                }
             }
         }
 
@@ -227,12 +235,26 @@ namespace TestApp.ViewModel
 
                 ClassBoxes.Clear();
                 Lines.Clear();
-
-                foreach(Line line in diagram.Lines) {
-                    Lines.Add(line);
-                }
+                
                 foreach(ClassBox box in diagram.ClassBoxes) {
                     ClassBoxes.Add(box);
+                }
+
+                foreach (Line line in diagram.Lines) {
+                    foreach(ClassBox box in diagram.ClassBoxes) { // Setting the actual ClassBox objects for each line. Fixing problem of only reading coordinates of ealier ClassBoxes. 
+                        if (box.equals(line.fromBox)) {
+                            line.fromBox = box;
+                        }
+                        else if(box.equals(line.toBox)) {
+                            line.toBox = box;
+                        }
+                    }
+
+
+                    line.fromBox.LineList.Add(line);
+                    line.toBox.LineList.Add(line);
+                    Lines.Add(line);
+
                 }
             }
         }

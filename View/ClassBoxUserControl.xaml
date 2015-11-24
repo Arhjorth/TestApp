@@ -20,19 +20,19 @@
         <Grid>
             <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="2"/>
             <StackPanel>
-                <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" >Class</TextBox>
+                <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove">Class</TextBox>
                 <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="2" Height="2" Margin="2"/>
             </StackPanel>
         </Grid>
 
         <i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseDown">
+            <i:EventTrigger EventName="MouseLeftButtonDown">
                 <cmd:EventToCommand Command="{Binding DataContext.CommandMouseDownClassBox, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
             <i:EventTrigger EventName="MouseMove">
                 <cmd:EventToCommand Command="{Binding DataContext.CommandMouseMoveClassBox, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
-            <i:EventTrigger EventName="MouseUp">
+            <i:EventTrigger EventName="MouseLeftButtonUp">
                 <cmd:EventToCommand Command="{Binding DataContext.CommandMouseUpClassBox, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
