@@ -32,6 +32,7 @@ namespace TestApp.ViewModel
         public ICommand CommandRedo { get; }
         public ICommand CommandLoad { get; }
         public ICommand CommandSave { get; }
+        public ICommand CommandNew { get; }
 
         public UndoRedoController undoRedoController = UndoRedoController.Instance;
 
@@ -58,6 +59,7 @@ namespace TestApp.ViewModel
             CommandMouseUpClassBox = new RelayCommand<MouseButtonEventArgs>(MouseUpClassBox);
             CommandSave = new RelayCommand(SaveDiagram);
             CommandLoad = new RelayCommand(LoadDiagram);
+            CommandNew = new RelayCommand(NewDiagram);
 
             CommandUndo = new RelayCommand(undoRedoController.Undo/*, undoRedoController.CanUndo*/); //TODO: Fix dis!
             CommandRedo = new RelayCommand(undoRedoController.Redo/*, undoRedoController.CanRedo*/);
@@ -202,10 +204,8 @@ namespace TestApp.ViewModel
             new OpenFileDialog() { Title = "Open Diagram", Filter = "XML Document (.xml)|*.xml", DefaultExt = "xml", InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), CheckFileExists = true };
 
         private void NewDiagram() {
-            if (dialogs.ShowNew()) {
-                ClassBoxes.Clear();
-                Lines.Clear();
-            }
+            ClassBoxes.Clear();
+            Lines.Clear();
         }
 
         private void SaveDiagram() {

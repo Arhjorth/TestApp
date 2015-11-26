@@ -9,7 +9,7 @@
         xmlns:Model="clr-namespace:TestApp.Model"
         xmlns:View="clr-namespace:TestApp.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="600">
+        Title="MainWindow" Height="600" Width="1000">
 
 
     <Window.DataContext>
@@ -24,8 +24,21 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="File">
-                <MenuItem Header="_Open" Command="{ Binding CommandLoad }"/>
-                <MenuItem Header="_Save" Command="{ Binding CommandSave }"/>
+                <MenuItem Header="_New" Command="{Binding CommandNew}">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/New.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save" Command="{ Binding CommandSave }">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Save.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open" Command="{ Binding CommandLoad }">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Open.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <!-- TODO: Nice to have feature
             <MenuItem Header="View" BorderBrush="Black">
@@ -33,14 +46,30 @@
               <MenuItem Header="_ZoomOut"/>
             </MenuItem> -->
             <MenuItem Header="Edit">
-                <MenuItem Header="_Add" Command="{Binding CommandAddClassBox}"/>
-                <MenuItem Header="_Remove"/>
-                <MenuItem Header="_Undo" Command="{Binding CommandUndo}"/>
-                <MenuItem Header="_Redo" Command="{Binding CommandRedo}"/>
+                <MenuItem Header="_Add" Command="{Binding CommandAddClassBox}">
+                <MenuItem.Icon>
+                    <Image Source="/Images/Add.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="_Remove">
+                <MenuItem.Icon>
+                    <Image Source="/Images/Remove.png"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="_Undo" Command="{Binding CommandUndo}">
+            <MenuItem.Icon>
+                <Image Source="/Images/Undo.png"/>
+            </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="_Redo" Command="{Binding CommandRedo}">
+            <MenuItem.Icon>
+                <Image Source="/Images/Redo.png"/>
+            </MenuItem.Icon>
+            </MenuItem>
             </MenuItem>
         </Menu>
 
-        <StackPanel Width="150" >
+        <StackPanel Width="100" >
             <Button x:Name="buttonAddClass" Content="Add Class" Command="{Binding CommandAddClassBox}" />
             <Button x:Name="buttonAddLine" Content="Add Line" Command="{Binding CommandAddLine}"/>
             <!-- <Image Source="%PathToImage%"></Image> -->
@@ -51,12 +80,11 @@
         <!-- Then Paint Classboxes-->
         <Border BorderBrush="Black" BorderThickness="1">
             <Grid>
-                <!-- DRAWING LINES ON ALICEBLUE CANVAS -->
+                <!-- DRAWING LINES ON CANVAS -->
                 <ItemsControl ItemsSource="{Binding Lines}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas ClipToBounds="True" Background="AliceBlue">
-                            </Canvas>
+                            <Canvas ClipToBounds="True"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -66,12 +94,11 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <!-- DRAWING CLASSBOXES ON TRANSPARENT CANVAS-->
+                <!-- DRAWING CLASSBOXES ON CANVAS-->
                 <ItemsControl ItemsSource="{Binding ClassBoxes}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <Canvas ClipToBounds="True" Background="Transparent">
-                            </Canvas>
+                            <Canvas ClipToBounds="True"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemContainerStyle>

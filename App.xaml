@@ -9,8 +9,13 @@
              >
 
     <Application.Resources>
-        <DataTemplate DataType="{x:Type Model:ClassBox}">
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes/ShinyBlue.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type Model:ClassBox}">
+            </DataTemplate>
             <local:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:TestApp.ViewModel" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
