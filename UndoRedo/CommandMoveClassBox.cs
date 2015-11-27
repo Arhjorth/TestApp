@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestApp.Model;
+using TestApp.ViewModel;
 
 namespace TestApp.UndoRedo {
     public class CommandMoveClassBox : IUndoRedoCommand {
 
-        ClassBox classBox;
-        double offsetX;
-        double offsetY;
+        private ClassBoxViewModel classBox;
+        private double offsetX;
+        private double offsetY;
 
-        public CommandMoveClassBox(ClassBox _classBox, double _offsetX, double _offsetY) {
+        public CommandMoveClassBox(ClassBoxViewModel _classBox, double _offsetX, double _offsetY) {
             classBox = _classBox;
             offsetX = _offsetX;
             offsetY = _offsetY;

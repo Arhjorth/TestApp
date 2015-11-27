@@ -19,8 +19,8 @@ namespace TestApp.ViewModel
     
     public class MainViewModel : ViewModelBase
     {   
-        public ObservableCollection<ClassBox> ClassBoxes { get; set; }
-        public ObservableCollection<Line> Lines { get; set; }
+        public ObservableCollection<ClassBoxViewModel> ClassBoxes { get; set; }
+        public ObservableCollection<LineViewModel> Lines { get; set; }
 
         public ICommand CommandAddClassBox { get; }
         public ICommand CommandAddLine { get; }
@@ -43,14 +43,14 @@ namespace TestApp.ViewModel
 
         private bool isAddingLine;
 
-        private ClassBox addingLineFrom;
+        private ClassBoxViewModel addingLineFrom;
 
         public DialogViews dialogs { get; set; }
 
         public MainViewModel()
         {
-            ClassBoxes = new ObservableCollection<ClassBox>();
-            Lines = new ObservableCollection<Line>();
+            ClassBoxes = new ObservableCollection<ClassBoxViewModel>();
+            Lines = new ObservableCollection<LineViewModel>();
 
             CommandAddClassBox = new RelayCommand(AddClassBox);
             CommandAddLine = new RelayCommand(AddLine);
@@ -69,7 +69,7 @@ namespace TestApp.ViewModel
         }
 
         private void AddClassBox() {
-            undoRedoController.AddAndExecute(new CommandAddClassBox(new ClassBox() , ClassBoxes ));
+            undoRedoController.AddAndExecute(new CommandAddClassBox(new ClassBoxViewModel() , ClassBoxes ));
             Console.WriteLine(undoRedoController.CanUndo());
         }
 
@@ -84,7 +84,7 @@ namespace TestApp.ViewModel
         private void MouseDownClassBox(MouseButtonEventArgs e) {
             if (!isAddingLine) { 
             Console.WriteLine("this");
-            ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
+            ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
             var mousePosition = RelativeMousePosition(e);
 
@@ -100,7 +100,7 @@ namespace TestApp.ViewModel
         private void MouseMoveClassBox(MouseEventArgs e) {
             if (Mouse.Captured != null) {
                 Console.WriteLine("is");
-                ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
+                ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
                 var mousePosition = RelativeMousePosition(e);
 
@@ -115,7 +115,7 @@ namespace TestApp.ViewModel
 
             // Used for adding a Line.
             if (isAddingLine) {
-                ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
+                ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
                 if (addingLineFrom == null) {
                     addingLineFrom = selectedBox;
@@ -123,7 +123,7 @@ namespace TestApp.ViewModel
                 } else if (addingLineFrom != selectedBox) {
 
                     int[] connectionPoints = calculateConnectionPoints(addingLineFrom, selectedBox);
-                    Line newLine = new Line() { fromBox = addingLineFrom, cF = connectionPoints[0], toBox = selectedBox, cT = connectionPoints[1] };
+                    LineViewModel newLine = new LineViewModel() { fromBox = addingLineFrom, cF = connectionPoints[0], toBox = selectedBox, cT = connectionPoints[1] };
                     undoRedoController.AddAndExecute(new CommandAddLine(newLine, Lines));
 
                     //Adding line to classbox arraylist of lines
@@ -140,12 +140,12 @@ namespace TestApp.ViewModel
                 }
             } else {
 
-                ClassBox selectedBox = (ClassBox)((FrameworkElement)e.MouseDevice.Target).DataContext;
+                ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
                 var mousePosition = RelativeMousePosition(e);
                 undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
                 e.MouseDevice.Target.ReleaseMouseCapture();
                 
-                foreach(Line line in selectedBox.LineList) {
+                foreach(LineViewModel line in selectedBox.LineList) {
                     int[] connectionsPoints = calculateConnectionPoints(line.fromBox, line.toBox);
                     line.cF = connectionsPoints[0];
                     line.cT = connectionsPoints[1];
@@ -154,7 +154,7 @@ namespace TestApp.ViewModel
             }
         }
 
-        private int[] calculateConnectionPoints(ClassBox addingLineFrom, ClassBox selectedBox) {
+        private int[] calculateConnectionPoints(ClassBoxViewModel addingLineFrom, ClassBoxViewModel selectedBox) {
             Point[] potList = new Point[] { addingLineFrom.ConnectTop, addingLineFrom.ConnectRight, addingLineFrom.ConnectBottom, addingLineFrom.ConnectLeft };
             Point[] potList0 = new Point[] { selectedBox.ConnectTop, selectedBox.ConnectRight, selectedBox.ConnectBottom, selectedBox.ConnectLeft };
 
@@ -214,11 +214,8 @@ namespace TestApp.ViewModel
                 path = saveDialog.FileName;
             }
 
-            var ClassBoxList = new List<ClassBox>(ClassBoxes);
-            var LinesList = new List<Line>(Lines);
-
             if (path != null) {
-                Diagram diagram = new Diagram() { Lines = LinesList, ClassBoxes = ClassBoxList };
+                Diagram diagram = new Diagram() { ClassBoxes = ClassBoxes.Select(x => x.ClassBox).ToList(), Lines = Lines.Select(x => x.Line).ToList() };
                 ControllerLoadSave.Instance.Save(diagram, path);
             }
         }
@@ -237,11 +234,14 @@ namespace TestApp.ViewModel
                 Lines.Clear();
                 
                 foreach(ClassBox box in diagram.ClassBoxes) {
-                    ClassBoxes.Add(box);
+                    ClassBoxes.Add( new ClassBoxViewModel(box));
                 }
+                foreach(Line line in diagram.Lines) {
+                    Lines.Add(new LineViewModel(line));
+                } 
 
-                foreach (Line line in diagram.Lines) {
-                    foreach(ClassBox box in diagram.ClassBoxes) { // Setting the actual ClassBox objects for each line. Fixing problem of only reading coordinates of ealier ClassBoxes. 
+                foreach (LineViewModel line in Lines) {
+                    foreach(ClassBoxViewModel box in ClassBoxes) { // Setting the actual ClassBox objects for each line. Fixing problem of only reading coordinates of ealier ClassBoxes. 
                         if (box.equals(line.fromBox)) {
                             line.fromBox = box;
                         }
@@ -253,8 +253,6 @@ namespace TestApp.ViewModel
 
                     line.fromBox.LineList.Add(line);
                     line.toBox.LineList.Add(line);
-                    Lines.Add(line);
-
                 }
             }
         }

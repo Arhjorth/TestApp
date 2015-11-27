@@ -183,6 +183,8 @@
     <Compile Include="UndoRedo\CommandAddLine.cs" />
     <Compile Include="UndoRedo\CommandMoveClassBox.cs" />
     <Compile Include="UndoRedo\UndoRedoController.cs" />
+    <Compile Include="ViewModel\ClassBoxViewModel.cs" />
+    <Compile Include="ViewModel\LineViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NotifyBase.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

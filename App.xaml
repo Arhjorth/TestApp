@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" d1p1:Ignorable="d" 
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:Model="clr-namespace:TestApp.Model"
+             xmlns:ViewModel ="clr-namespace:TestApp.ViewModel"
              >
 
     <Application.Resources>
@@ -13,7 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Themes/ShinyBlue.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type Model:ClassBox}">
+            <DataTemplate DataType="{x:Type ViewModel:ClassBoxViewModel}">
             </DataTemplate>
             <local:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:TestApp.ViewModel" />
         </ResourceDictionary>

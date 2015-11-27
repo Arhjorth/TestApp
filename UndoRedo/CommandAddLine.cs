@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestApp.Model;
+﻿using TestApp.Model;
 using System.Collections.ObjectModel;
+using TestApp.ViewModel;
 
 namespace TestApp.UndoRedo {
     public class CommandAddLine : IUndoRedoCommand {
-        private ObservableCollection<Line> lines;
+        private ObservableCollection<LineViewModel> lines;
 
-        private Line line;
+        private LineViewModel line;
 
 
-        public CommandAddLine(Line line, ObservableCollection<Line> lines) {
+        public CommandAddLine(LineViewModel line, ObservableCollection<LineViewModel> lines) {
             this.lines = lines;
             this.line = line;
         }

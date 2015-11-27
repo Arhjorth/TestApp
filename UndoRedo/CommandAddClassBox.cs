@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TestApp.Model;
+using TestApp.ViewModel;
 
 namespace TestApp.UndoRedo {
     class CommandAddClassBox : IUndoRedoCommand {
-        private ClassBox classBox;
-        private ObservableCollection<ClassBox> classBoxes;
+        private ClassBoxViewModel classBox;
+        private ObservableCollection<ClassBoxViewModel> classBoxes;
 
-        public CommandAddClassBox(ClassBox _ClassBox, ObservableCollection<ClassBox> _ClassBoxes) {
+        public CommandAddClassBox(ClassBoxViewModel _ClassBox, ObservableCollection<ClassBoxViewModel> _ClassBoxes) {
             classBox = _ClassBox;
             classBoxes = _ClassBoxes;
         }
