@@ -28,7 +28,7 @@
             <StackPanel>
                 <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="2" Height="2" Margin="2"/>
-                <ListBox ItemsSource="{Binding Methods}" Margin="2" BorderThickness="0" Background="{x:Null}" Foreground="Transparent">
+                <ListBox ItemsSource="{Binding Methods}" Margin="0" BorderThickness="0" Background="{x:Null}" Foreground="Transparent">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Height" Value="20" />
@@ -36,11 +36,13 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBox/>
+                            <TextBox BorderThickness="0" MaxLines="1" HorizontalAlignment="Stretch" Text="New Method" FontSize="10" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Background="Transparent">
+                                
+                            </TextBox>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button Height="10" Width="10" HorizontalAlignment="Right" Command="{Binding  DataContext.CommandAddMethod, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                <Button Height="10" Width="10" HorizontalAlignment="Right" Command="{Binding CommandAddMethod}">
                     <Button.Template>
                         <ControlTemplate>
                             <Image Source="/Images/Add.png" />

@@ -14,6 +14,7 @@ namespace TestApp.ViewModel {
     public class ClassBoxViewModel : ViewModelBase {
 
         public ICommand RemoveCommand { get; }
+        public ICommand CommandAddMethod { get; }
 
         public ObservableCollection<ClassBoxViewModel> ClassBoxes { get; set; }
         public ObservableCollection<LineViewModel> Lines { get; set; }
@@ -29,6 +30,7 @@ namespace TestApp.ViewModel {
         public ClassBoxViewModel() {
             ClassBox = new ClassBox();
             RemoveCommand = new RelayCommand(Remove);
+            CommandAddMethod = new RelayCommand(AddMethod);
             ClassBoxes = MainViewModel.ClassBoxes;
             Lines = MainViewModel.Lines;
 
@@ -129,9 +131,9 @@ namespace TestApp.ViewModel {
         public ArrayList LineList { get { return ClassBox.LineList; } }
 
         public ObservableCollection<String> Methods { get; set; } = new ObservableCollection<String>();
-        public void AddMethod(String str) {
-            ClassBox.Methods.Add(str);
-            Methods.Add(str);
+        public void AddMethod() {
+            ClassBox.Methods.Add("new method");
+            Methods.Add("new Method");
             RaisePropertyChanged(nameof(Methods));
         }
 

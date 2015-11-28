@@ -61,17 +61,12 @@ namespace TestApp.ViewModel
             CommandSave = new RelayCommand(SaveDiagram);
             CommandLoad = new RelayCommand(LoadDiagram);
             CommandNew = new RelayCommand(NewDiagram);
-            CommandAddMethod = new RelayCommand(AddMethodToBox);
 
             CommandUndo = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
             CommandRedo = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
 
           //  CommandMouseMoveClassbox = new RelayCommand<MouseButtonEventArgs>(MousemMoveClassBox);
 
-        }
-
-        private void AddMethodToBox() {
-            ClassBoxes[0].AddMethod("new method");
         }
 
         private void AddClassBox() {
@@ -103,12 +98,16 @@ namespace TestApp.ViewModel
 
         private void MouseMoveClassBox(MouseEventArgs e) {
             if (Mouse.Captured != null) {
-                ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
+                var target = ((FrameworkElement)e.MouseDevice.Target).DataContext;
 
-                var mousePosition = RelativeMousePosition(e);
+                if (target is ClassBoxViewModel) {
+                    ClassBoxViewModel selectedBox = (ClassBoxViewModel)target;
 
-                selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
-                selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+                    var mousePosition = RelativeMousePosition(e);
+
+                    selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
+                    selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+                }
             }
         }
 
