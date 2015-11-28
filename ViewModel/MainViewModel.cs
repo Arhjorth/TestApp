@@ -1,5 +1,5 @@
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
@@ -33,6 +33,7 @@ namespace TestApp.ViewModel
         public ICommand CommandLoad { get; }
         public ICommand CommandSave { get; }
         public ICommand CommandNew { get; }
+        public ICommand CommandAddMethod { get; }
 
         public UndoRedoController undoRedoController = UndoRedoController.Instance;
 
@@ -60,17 +61,21 @@ namespace TestApp.ViewModel
             CommandSave = new RelayCommand(SaveDiagram);
             CommandLoad = new RelayCommand(LoadDiagram);
             CommandNew = new RelayCommand(NewDiagram);
+            CommandAddMethod = new RelayCommand(AddMethodToBox);
 
-            CommandUndo = new RelayCommand(undoRedoController.Undo/*, undoRedoController.CanUndo*/); //TODO: Fix dis!
-            CommandRedo = new RelayCommand(undoRedoController.Redo/*, undoRedoController.CanRedo*/);
+            CommandUndo = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
+            CommandRedo = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
 
           //  CommandMouseMoveClassbox = new RelayCommand<MouseButtonEventArgs>(MousemMoveClassBox);
 
         }
 
+        private void AddMethodToBox() {
+            ClassBoxes[0].AddMethod("new method");
+        }
+
         private void AddClassBox() {
             undoRedoController.AddAndExecute(new CommandAddClassBox(new ClassBoxViewModel() , ClassBoxes ));
-            Console.WriteLine(undoRedoController.CanUndo());
         }
 
         private void AddLine() {
@@ -83,7 +88,6 @@ namespace TestApp.ViewModel
             
         private void MouseDownClassBox(MouseButtonEventArgs e) {
             if (!isAddingLine) { 
-            Console.WriteLine("this");
             ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
             var mousePosition = RelativeMousePosition(e);
@@ -99,15 +103,12 @@ namespace TestApp.ViewModel
 
         private void MouseMoveClassBox(MouseEventArgs e) {
             if (Mouse.Captured != null) {
-                Console.WriteLine("is");
                 ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
 
                 var mousePosition = RelativeMousePosition(e);
 
                 selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
                 selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
-                
-                Console.WriteLine(selectedBox.PosX+" "+selectedBox.PosY+" "+selectedBox.ConnectTop);
             }
         }
 
@@ -130,7 +131,6 @@ namespace TestApp.ViewModel
                     addingLineFrom.LineList.Add(newLine);
                     selectedBox.LineList.Add(newLine);
 
-                    Console.WriteLine(" LINES : " + Lines.Count);
                     addingLineFrom.IsSelected = false;
 
                     isAddingLine = false;

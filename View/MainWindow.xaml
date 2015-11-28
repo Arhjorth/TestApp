@@ -19,6 +19,8 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding CommandUndo}" Gesture="CTRL+Z"/>
         <KeyBinding Command="{Binding CommandRedo}" Gesture="CTRL+R"/>
+        <KeyBinding Command="{Binding CommandSave}" Gesture="CTRL+S"/>
+        <KeyBinding Command="{Binding CommandLoad}" Gesture="CTRL+O"/>
     </Window.InputBindings>
 
     <DockPanel LastChildFill="True">

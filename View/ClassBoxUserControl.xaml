@@ -12,16 +12,39 @@
 
     <DockPanel>
 
-        
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2" Height="15" Width="15" DockPanel.Dock="Top" Margin="0,-15"/> <!-- Bottom -->
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Bottom" Margin="0,-15"/> <!-- Right -->
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Right" Margin="-15,0"/> <!-- Top -->
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Left" Margin="-15,0"/> <!-- Left -->
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2" Height="15" Width="15" DockPanel.Dock="Top" Margin="0,-15"/>
+        <!-- Bottom -->
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Bottom" Margin="0,-15"/>
+        <!-- Right -->
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Right" Margin="-15,0"/>
+        <!-- Top -->
+        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Left" Margin="-15,0"/>
+        <!-- Left -->
+
         <Grid>
             <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="2"/>
             <StackPanel>
-                <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove">Class</TextBox>
+                <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="2" Height="2" Margin="2"/>
+                <ListBox ItemsSource="{Binding Methods}" Margin="2" BorderThickness="0" Background="{x:Null}" Foreground="Transparent">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Height" Value="20" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button Height="10" Width="10" HorizontalAlignment="Right" Command="{Binding  DataContext.CommandAddMethod, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Image Source="/Images/Add.png" />
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </StackPanel>
         </Grid>
 
@@ -38,5 +61,4 @@
         </i:Interaction.Triggers>
 
     </DockPanel>
-
 </UserControl>
