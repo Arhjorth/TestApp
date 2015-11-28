@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 
 namespace TestApp.Model {
-    public class Line : ViewModelBase {
+    public class Line {
 
         public ClassBox fromBox;
         public ClassBox toBox;

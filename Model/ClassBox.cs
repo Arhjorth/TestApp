@@ -7,8 +7,10 @@ using System.Collections;
 using System.Xml.Serialization;
 
 namespace TestApp.Model {
-    public class ClassBox : ViewModelBase {
+    public class ClassBox {
 
+        public ArrayList Methods = new ArrayList();
+        public String Name { get; set; } = "class";
         public double Height { get; set; } = 100;
         public double Width { get; set; } = 100;
         public double PosX { get; set; } = 100;
