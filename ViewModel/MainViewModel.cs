@@ -139,18 +139,21 @@ namespace TestApp.ViewModel
 
                 }
             } else {
+                var target = ((FrameworkElement)e.MouseDevice.Target).DataContext;
 
-                ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
-                var mousePosition = RelativeMousePosition(e);
-                undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
-                e.MouseDevice.Target.ReleaseMouseCapture();
-                
-                foreach(LineViewModel line in selectedBox.LineList) {
-                    int[] connectionsPoints = calculateConnectionPoints(line.fromBox, line.toBox);
-                    line.cF = connectionsPoints[0];
-                    line.cT = connectionsPoints[1];
-                    line.raisePropertyChanged();
-                }
+                if (target is ClassBoxViewModel) {
+                    ClassBoxViewModel selectedBox = (ClassBoxViewModel) target;
+                    var mousePosition = RelativeMousePosition(e);
+                    undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
+                    e.MouseDevice.Target.ReleaseMouseCapture();
+
+                    foreach (LineViewModel line in selectedBox.LineList) {
+                        int[] connectionsPoints = calculateConnectionPoints(line.fromBox, line.toBox);
+                        line.cF = connectionsPoints[0];
+                        line.cT = connectionsPoints[1];
+                        line.raisePropertyChanged();
+                    }
+               }
             }
         }
 
