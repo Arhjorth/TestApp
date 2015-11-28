@@ -11,7 +11,11 @@
              d:DesignHeight="100" d:DesignWidth="100">
 
     <DockPanel>
-
+        <DockPanel.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Delete" Command="{Binding RemoveCommand}"></MenuItem>
+            </ContextMenu>
+        </DockPanel.ContextMenu>
         
         <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2" Height="15" Width="15" DockPanel.Dock="Top" Margin="0,-15"/> <!-- Bottom -->
         <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Bottom" Margin="0,-15"/> <!-- Right -->
@@ -25,6 +29,9 @@
             </StackPanel>
         </Grid>
 
+
+
+        
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonDown">
                 <cmd:EventToCommand Command="{Binding DataContext.CommandMouseDownClassBox, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>
@@ -38,5 +45,5 @@
         </i:Interaction.Triggers>
 
     </DockPanel>
-
+    
 </UserControl>

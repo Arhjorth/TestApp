@@ -19,8 +19,8 @@ namespace TestApp.ViewModel
     
     public class MainViewModel : ViewModelBase
     {   
-        public ObservableCollection<ClassBoxViewModel> ClassBoxes { get; set; }
-        public ObservableCollection<LineViewModel> Lines { get; set; }
+        public static ObservableCollection<ClassBoxViewModel> ClassBoxes { get; set; }
+        public static ObservableCollection<LineViewModel> Lines { get; set; }
 
         public ICommand CommandAddClassBox { get; }
         public ICommand CommandAddLine { get; }
@@ -34,7 +34,7 @@ namespace TestApp.ViewModel
         public ICommand CommandSave { get; }
         public ICommand CommandNew { get; }
 
-        public UndoRedoController undoRedoController = UndoRedoController.Instance;
+        public static UndoRedoController undoRedoController = UndoRedoController.Instance;
 
         // Saves the initial point that the mouse has during a move operation.
         private Point initialMousePosition;

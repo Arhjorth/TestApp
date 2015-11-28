@@ -1,21 +1,35 @@
 ﻿using GalaSoft.MvvmLight;
-using System;
+using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TestApp.UndoRedo;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using TestApp.Model;
+using System.Collections.ObjectModel;
 
 namespace TestApp.ViewModel {
     public class ClassBoxViewModel : ViewModelBase {
+
+        public ICommand RemoveCommand { get; }
+
+        public ObservableCollection<ClassBoxViewModel> ClassBoxes { get; set; }
+        public ObservableCollection<LineViewModel> Lines { get; set; }
+
+        public UndoRedoController undoRedoController = MainViewModel.undoRedoController;
+
+        private void Remove() {
+            undoRedoController.AddAndExecute(new CommandDeleteClassBox(this,ClassBoxes ,Lines));
+        }
 
         public ClassBox ClassBox { get; set; }
 
         public ClassBoxViewModel() {
             ClassBox = new ClassBox();
+            RemoveCommand = new RelayCommand(Remove);
+            ClassBoxes = MainViewModel.ClassBoxes;
+            Lines = MainViewModel.Lines;
+
         }
         public ClassBoxViewModel(ClassBox _box)  : base(){
             ClassBox = _box;
