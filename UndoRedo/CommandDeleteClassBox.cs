@@ -21,6 +21,10 @@ namespace TestApp.UndoRedo {
             linesToRemove = classBox.LineList.Cast<LineViewModel>().ToList(); // Copy on classbox.lineList, to ensure that we know which lines to delete.
         }
 
+
+        
+
+
         public void Execute() {
 
 
