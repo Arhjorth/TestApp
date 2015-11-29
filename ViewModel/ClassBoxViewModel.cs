@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using TestApp.Model;
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections;
 using TestApp.UndoRedo;
@@ -6,9 +7,9 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using TestApp.Model;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace TestApp.ViewModel {
     public class ClassBoxViewModel : ViewModelBase {
@@ -33,8 +34,12 @@ namespace TestApp.ViewModel {
             Lines = MainViewModel.Lines;
 
         }
-        public ClassBoxViewModel(ClassBox _box) : base() {
+        public ClassBoxViewModel(ClassBox _box) {
             ClassBox = _box;
+            RemoveCommand = new RelayCommand(Remove);
+            CommandAddMethod = new RelayCommand(AddMethod);
+            ClassBoxes = MainViewModel.ClassBoxes;
+            Lines = MainViewModel.Lines;
         }
 
         public double PosX {
@@ -136,27 +141,24 @@ namespace TestApp.ViewModel {
         public bool IsAbstract {
             get { return isAbstract; }
             set { isAbstract = value; RaisePropertyChanged(); RaisePropertyChanged(() => SelectedColor); } }
-        public Brush SelectedColor => IsSelected ? Brushes.Orange : IsAbstract ? IsMoveSelected ? Brushes.Blue : Brushes.LightBlue : IsMoveSelected ? Brushes.SkyBlue : Brushes.Teal;
+        public Brush SelectedColor => IsSelected ? Brushes.Orange : IsAbstract ? (IsMoveSelected ? Brushes.DodgerBlue : Brushes.MediumBlue) : (IsMoveSelected ? Brushes.SkyBlue : Brushes.Teal);
 
         public ArrayList LineList { get { return ClassBox.LineList; } }
 
         public ObservableCollection<String> Methods {
-            get { return new ObservableCollection<string>( ClassBox.Methods.Cast<String>().ToList() ); }
-            set { AddMethod(); }
+            get { return new ObservableCollection<string>( ClassBox.Methods ); }
+            set { ClassBox.Methods = new List<String>(value); }
         }
 
         private void AddMethod() {
+            ClassBox.Height += 20;
             ClassBox.Methods.Add("new method");
             RaisePropertyChanged(nameof(Methods));
+            RaisePropertyChanged(nameof(Height));
         }
 
         public void RaisePropertyMethods() {
             RaisePropertyChanged(nameof(Methods));
         }
-
-        public void CommandAbstract() {
-            RaisePropertyChanged(nameof(IsAbstract));
-        }
-
     }
 }

@@ -1,17 +1,15 @@
-﻿using GalaSoft.MvvmLight;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.Windows;
-using System.Windows.Media;
 using System.Collections;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace TestApp.Model {
     public class ClassBox {
 
-        public ArrayList Methods = new ArrayList();
+        public List<String> Methods = new List<String>();
         public String Name { get; set; } = "class";
-        public double Height { get; set; } = 100;
+        public double Height { get; set; } = 60;
         public double Width { get; set; } = 100;
         public double PosX { get; set; } = 100;
         public double PosY { get; set; } = 100;
@@ -21,7 +19,7 @@ namespace TestApp.Model {
         public Point ConnectBottom { get; set; } = new Point();
         [XmlIgnore]
         public ArrayList LineList = new ArrayList();
-        
+
         public Point getPoint(int v1) {
 
             switch (v1) {
@@ -38,5 +36,4 @@ namespace TestApp.Model {
             }
         }
     }
-
 }

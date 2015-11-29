@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-
-namespace TestApp.Model {
+﻿namespace TestApp.Model {
     public class Line {
 
         public ClassBox fromBox;
@@ -9,5 +7,4 @@ namespace TestApp.Model {
         public int cT;
 
     }
-
 }

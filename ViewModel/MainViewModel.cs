@@ -100,13 +100,17 @@ namespace TestApp.ViewModel
                 var mousePosition = RelativeMousePosition(e);
 
                 initialMousePosition = mousePosition;
-                var selectedBoxes = ClassBoxes.Where(x => x.IsMoveSelected);
-                if (!selectedBoxes.Any()) selectedBoxes = new List<ClassBoxViewModel>() { selectedBox };
 
-                foreach (var box in selectedBoxes) {
-                    initialClassBoxPositions.Add(box, new Point(box.PosX, box.PosY));
+                if (selectedBox.IsMoveSelected) {
+                    var selectedBoxes = ClassBoxes.Where(x => x.IsMoveSelected);
+                    if (!selectedBoxes.Any()) selectedBoxes = new List<ClassBoxViewModel>() { selectedBox };
+
+                    foreach (var box in selectedBoxes) {
+                        initialClassBoxPositions.Add(box, new Point(box.PosX, box.PosY));
+                    }
+                } else {
+                    initialClassBoxPositions.Add(selectedBox, new Point(selectedBox.PosX, selectedBox.PosY));
                 }
-                Console.WriteLine(initialClassBoxPositions.Count());
                 e.MouseDevice.Target.CaptureMouse();
             }
         }
@@ -130,11 +134,16 @@ namespace TestApp.ViewModel
 
                     var mousePosition = RelativeMousePosition(e);
 
-                    foreach ( var box in selectedBoxes) {
-                        var originalPosition = initialClassBoxPositions[box];
-                        Console.WriteLine(originalPosition.X);
-                        box.PosX = originalPosition.X + (mousePosition.X - initialMousePosition.X);
-                        box.PosY = originalPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+                    if (selectedBox.IsMoveSelected) {
+                        foreach (var box in selectedBoxes) {
+                            var originalPosition = initialClassBoxPositions[box];
+                            box.PosX = originalPosition.X + (mousePosition.X - initialMousePosition.X);
+                            box.PosY = originalPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+                        }
+                    } else {
+                        var originalPosition = initialClassBoxPositions[selectedBox];
+                        selectedBox.PosX = originalPosition.X + (mousePosition.X - initialMousePosition.X);
+                        selectedBox.PosY = originalPosition.Y + (mousePosition.Y - initialMousePosition.Y);
                     }
                 }
             }
@@ -157,9 +166,10 @@ namespace TestApp.ViewModel
 
         private void MouseUpClassBox(MouseButtonEventArgs e) {
 
+            var target = ((FrameworkElement)e.MouseDevice.Target).DataContext;
             // Used for adding a Line.
-            if (isAddingLine) {
-                ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
+            if (isAddingLine && (target is ClassBoxViewModel)) {
+                ClassBoxViewModel selectedBox = (ClassBoxViewModel)target;
 
                 if (addingLineFrom == null) {
                     addingLineFrom = selectedBox;
@@ -178,12 +188,8 @@ namespace TestApp.ViewModel
 
                     isAddingLine = false;
                     addingLineFrom = null;
-
-
                 }
             } else {
-                var target = ((FrameworkElement)e.MouseDevice.Target).DataContext;
-
                 if (target is ClassBoxViewModel) {
                     ClassBoxViewModel selectedBox = (ClassBoxViewModel) target;
                     var mousePosition = RelativeMousePosition(e);
@@ -200,7 +206,6 @@ namespace TestApp.ViewModel
                             line.raisePropertyChanged();
                         }
                     }
-
                     initialClassBoxPositions.Clear();
                     e.MouseDevice.Target.ReleaseMouseCapture();
                 }

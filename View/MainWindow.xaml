@@ -22,6 +22,8 @@
         <KeyBinding Command="{Binding CommandRedo}" Gesture="CTRL+R"/>
         <KeyBinding Command="{Binding CommandSave}" Gesture="CTRL+S"/>
         <KeyBinding Command="{Binding CommandLoad}" Gesture="CTRL+O"/>
+        <KeyBinding Command="{Binding CommandAddClassBox}" Gesture="CTRL+A"/>
+        <KeyBinding Command="{Binding CommandNew}" Gesture="CTRL+N"/>
     </Window.InputBindings>
 
     <DockPanel LastChildFill="True">

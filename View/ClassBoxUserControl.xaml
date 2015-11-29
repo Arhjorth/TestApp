@@ -15,7 +15,7 @@
         <DockPanel.ContextMenu>
             <ContextMenu>
                 <MenuItem Header="Delete" Command="{Binding RemoveCommand}"/>
-                <MenuItem Header="Abstract" Command="{Binding CommandAbstract}" IsCheckable="true" IsChecked="{Binding IsAbstract}"/>
+                <MenuItem Header="Abstract" IsCheckable="true" IsChecked="{Binding IsAbstract}"/>
             </ContextMenu>
         </DockPanel.ContextMenu>
 
@@ -27,7 +27,7 @@
         <Grid>
             <Rectangle Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2"/>
             <StackPanel>
-                <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                 <Rectangle Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2" Height="2" Margin="2"/>
                 <ListBox ItemsSource="{Binding Methods}" Margin="0" BorderThickness="0" Background="{x:Null}" Foreground="Transparent">
                     <ListBox.ItemContainerStyle>
@@ -37,7 +37,7 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBox BorderThickness="0" MaxLines="1" Text="{Binding Path=.}" FontSize="10" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Background="Transparent" Style="{x:Null}"/>
+                            <TextBox BorderThickness="0" MaxLines="1" Text="{Binding ., UpdateSourceTrigger=PropertyChanged}" FontSize="10" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove"  Style="{x:Null}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
