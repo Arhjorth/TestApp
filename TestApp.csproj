@@ -66,6 +66,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="TestApp.Model">
+      <HintPath>TestApp.Model\TestApp.Model\bin\Debug\TestApp.Model.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -176,9 +179,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LoadSave\ControllerLoadSave.cs" />
-    <Compile Include="Model\ClassBox.cs" />
-    <Compile Include="Model\Diagram.cs" />
-    <Compile Include="Model\Line.cs" />
     <Compile Include="UndoRedo\CommandAddClassBox.cs" />
     <Compile Include="UndoRedo\CommandAddLine.cs" />
     <Compile Include="UndoRedo\CommandDeleteClassBox.cs" />
