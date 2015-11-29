@@ -14,20 +14,21 @@
 
         <DockPanel.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Delete" Command="{Binding RemoveCommand}"></MenuItem>
+                <MenuItem Header="Delete" Command="{Binding RemoveCommand}"/>
+                <MenuItem Header="Abstract" Command="{Binding CommandAbstract}" IsCheckable="true" IsChecked="{Binding IsAbstract}"/>
             </ContextMenu>
         </DockPanel.ContextMenu>
-        
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2" Height="15" Width="15" DockPanel.Dock="Top" Margin="0,-15"/> <!-- Bottom -->
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Bottom" Margin="0,-15"/> <!-- Right -->
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Right" Margin="-15,0"/> <!-- Top -->
-        <Ellipse Fill="White" Stroke="Teal" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Left" Margin="-15,0"/> <!-- Left -->
+
+        <Ellipse Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2" Height="15" Width="15" DockPanel.Dock="Top" Margin="0,-15"/> <!-- Bottom -->
+        <Ellipse Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Bottom" Margin="0,-15"/> <!-- Right -->
+        <Ellipse Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Right" Margin="-15,0"/> <!-- Top -->
+        <Ellipse Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2"  Height="15" Width="15" DockPanel.Dock="Left" Margin="-15,0"/> <!-- Left -->
 
         <Grid>
-            <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="2"/>
+            <Rectangle Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2"/>
             <StackPanel>
                 <TextBox HorizontalAlignment="Center" BorderThickness="0" Margin="2" MaxLines="1" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Rectangle Fill="{Binding SelectedColor}" Stroke="Teal" StrokeThickness="2" Height="2" Margin="2"/>
+                <Rectangle Fill="White" Stroke="{Binding SelectedColor}" StrokeThickness="2" Height="2" Margin="2"/>
                 <ListBox ItemsSource="{Binding Methods}" Margin="0" BorderThickness="0" Background="{x:Null}" Foreground="Transparent">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -36,9 +37,7 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBox BorderThickness="0" MaxLines="1" HorizontalAlignment="Stretch" Text="New Method" FontSize="10" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Background="Transparent">
-                                
-                            </TextBox>
+                            <TextBox BorderThickness="0" MaxLines="1" Text="{Binding Path=.}" FontSize="10" MouseDown="TextBox_MouseDown" MouseMove="TextBox_MouseMove" Background="Transparent" Style="{x:Null}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -52,9 +51,6 @@
             </StackPanel>
         </Grid>
 
-
-
-        
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonDown">
                 <cmd:EventToCommand Command="{Binding DataContext.CommandMouseDownClassBox, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" PassEventArgsToCommand="True"/>

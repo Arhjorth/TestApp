@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestApp"
         xmlns:ViewModel="clr-namespace:TestApp.ViewModel"
         xmlns:Model="clr-namespace:TestApp.Model"
         xmlns:View="clr-namespace:TestApp.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000">
+        Title="Gruppe 14" Height="600" Width="1000">
 
 
     <Window.DataContext>
@@ -24,6 +25,7 @@
     </Window.InputBindings>
 
     <DockPanel LastChildFill="True">
+        <!-- Main menu-->
         <Menu DockPanel.Dock="Top" Background="White">
             <MenuItem Header="File">
                 <MenuItem Header="_New" Command="{Binding CommandNew}">
@@ -71,17 +73,28 @@
             </MenuItem>
         </Menu>
 
+        <!-- SIDE BAR -->
         <StackPanel Width="100" >
             <Button x:Name="buttonAddClass" Content="Add Class" Command="{Binding CommandAddClassBox}" />
             <Button x:Name="buttonAddLine" Content="Add Line" Command="{Binding CommandAddLine}"/>
             <!-- <Image Source="%PathToImage%"></Image> -->
         </StackPanel>
 
-
-
-        <!-- Then Paint Classboxes-->
+        <!-- CANVAS AREA -->
         <Border BorderBrush="Black" BorderThickness="1">
             <Grid>
+                
+                <!-- TILES TO THE BG -->
+                <Grid.Background>
+                    <VisualBrush TileMode="Tile"
+                             Viewport="0,0,40,40" ViewportUnits="Absolute" 
+                             Viewbox="0,0,40,40" ViewboxUnits="Absolute">
+                        <VisualBrush.Visual>
+                            <Rectangle Stroke="Black" StrokeThickness="0.05" Height="40" Width="40"/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Grid.Background>
+
                 <!-- DRAWING LINES ON CANVAS -->
                 <ItemsControl ItemsSource="{Binding Lines}">
                     <ItemsControl.ItemsPanel>
@@ -115,6 +128,28 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                
+                <!-- SELCETION BOX -->
+                <Canvas>
+                    <Border Canvas.Left="{Binding SelectionBoxX}" Canvas.Top="{Binding SelectionBoxY}" Width="{Binding SelectionBoxWidth}" Height="{Binding SelectionBoxHeight}"
+                        BorderBrush="Blue" BorderThickness="1" Opacity="0.8">
+                        <Rectangle Fill="Blue" Opacity=".2"/>
+                    </Border>
+                </Canvas>
+
+                <!-- EVENT TRIGGERS FOR CANVAS-->
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <cmd:EventToCommand Command="{Binding CommandMouseDownCanvas}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <cmd:EventToCommand Command="{Binding CommandMouseMoveCanvas}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                        <cmd:EventToCommand Command="{Binding CommandMouseUpCanvas}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
             </Grid>
         </Border>
     </DockPanel>

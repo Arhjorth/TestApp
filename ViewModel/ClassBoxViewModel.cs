@@ -7,18 +7,16 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using TestApp.Model;
-using System.Collections.ObjectModel;
 using System;
+using System.Linq;
 
 namespace TestApp.ViewModel {
     public class ClassBoxViewModel : ViewModelBase {
 
         public ICommand RemoveCommand { get; }
         public ICommand CommandAddMethod { get; }
-
         public ObservableCollection<ClassBoxViewModel> ClassBoxes { get; set; }
         public ObservableCollection<LineViewModel> Lines { get; set; }
-
         public UndoRedoController undoRedoController = MainViewModel.undoRedoController;
 
         private void Remove() {
@@ -124,21 +122,40 @@ namespace TestApp.ViewModel {
             return (this.PosX == fromBox.PosX) && (this.PosY == fromBox.PosY);
         }
 
-        public Brush SelectedColor => IsSelected ? Brushes.Orchid : Brushes.White;
+        private bool isSelected;
+        public bool IsSelected {
+            get { return isSelected; }
+            set { isSelected = value; RaisePropertyChanged(() => SelectedColor); } }
 
-        public bool IsSelected { get; set; }
+        private bool isMoveSelected;
+        public bool IsMoveSelected {
+            get { return isMoveSelected; }
+            set { isMoveSelected = value; RaisePropertyChanged(() => SelectedColor); } }
+
+        private bool isAbstract;
+        public bool IsAbstract {
+            get { return isAbstract; }
+            set { isAbstract = value; RaisePropertyChanged(); RaisePropertyChanged(() => SelectedColor); } }
+        public Brush SelectedColor => IsSelected ? Brushes.Orange : IsAbstract ? IsMoveSelected ? Brushes.Blue : Brushes.LightBlue : IsMoveSelected ? Brushes.SkyBlue : Brushes.Teal;
 
         public ArrayList LineList { get { return ClassBox.LineList; } }
 
-        public ObservableCollection<String> Methods { get; set; } = new ObservableCollection<String>();
-        public void AddMethod() {
+        public ObservableCollection<String> Methods {
+            get { return new ObservableCollection<string>( ClassBox.Methods.Cast<String>().ToList() ); }
+            set { AddMethod(); }
+        }
+
+        private void AddMethod() {
             ClassBox.Methods.Add("new method");
-            Methods.Add("new Method");
             RaisePropertyChanged(nameof(Methods));
         }
 
         public void RaisePropertyMethods() {
             RaisePropertyChanged(nameof(Methods));
+        }
+
+        public void CommandAbstract() {
+            RaisePropertyChanged(nameof(IsAbstract));
         }
 
     }

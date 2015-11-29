@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace TestApp.ViewModel
 {
@@ -27,7 +28,10 @@ namespace TestApp.ViewModel
         public ICommand CommandMouseUpClassBox { get; }
         public ICommand CommandMouseDownClassBox { get; } 
         public ICommand CommandMouseMoveClassBox { get; }
-        public ICommand MouseMoveShapeCommand { get; }
+        public ICommand CommandMouseDownCanvas { get; }
+        public ICommand CommandMouseMoveCanvas { get; }
+        public ICommand CommandMouseUpCanvas { get; }
+        public ICommand CommandMouseMoveShapeCommand { get; }
         public ICommand CommandUndo { get; }
         public ICommand CommandRedo { get; }
         public ICommand CommandLoad { get; }
@@ -40,7 +44,13 @@ namespace TestApp.ViewModel
         // Saves the initial point that the mouse has during a move operation.
         private Point initialMousePosition;
         // Saves the initial point that the shape has during a move operation.
-        private Point initialClassBoxPosition;
+        private Dictionary<ClassBoxViewModel,Point> initialClassBoxPositions = new Dictionary<ClassBoxViewModel,Point>();
+
+        private Point SelectionBoxStart;
+        public double SelectionBoxX { get; set; }
+        public double SelectionBoxY { get; set; }
+        public double SelectionBoxWidth { get; set; }
+        public double SelectionBoxHeight { get; set; }
 
         private bool isAddingLine;
 
@@ -58,6 +68,9 @@ namespace TestApp.ViewModel
             CommandMouseDownClassBox = new RelayCommand<MouseButtonEventArgs>(MouseDownClassBox);
             CommandMouseMoveClassBox = new RelayCommand<MouseEventArgs>(MouseMoveClassBox);
             CommandMouseUpClassBox = new RelayCommand<MouseButtonEventArgs>(MouseUpClassBox);
+            CommandMouseDownCanvas = new RelayCommand<MouseButtonEventArgs>(MouseDownCanvas);
+            CommandMouseMoveCanvas = new RelayCommand<MouseEventArgs>(MouseMoveCanvas);
+            CommandMouseUpCanvas = new RelayCommand<MouseButtonEventArgs>(MouseUpCanvas);
             CommandSave = new RelayCommand(SaveDiagram);
             CommandLoad = new RelayCommand(LoadDiagram);
             CommandNew = new RelayCommand(NewDiagram);
@@ -77,22 +90,32 @@ namespace TestApp.ViewModel
             isAddingLine = true;
 
         }
-        
+
         // private class MousemMoveClassBox(MouseButtonEventArgs e)
 
-            
+
         private void MouseDownClassBox(MouseButtonEventArgs e) {
-            if (!isAddingLine) { 
-            ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
+            if (!isAddingLine) {
+                ClassBoxViewModel selectedBox = (ClassBoxViewModel)((FrameworkElement)e.MouseDevice.Target).DataContext;
+                var mousePosition = RelativeMousePosition(e);
 
-            var mousePosition = RelativeMousePosition(e);
+                initialMousePosition = mousePosition;
+                var selectedBoxes = ClassBoxes.Where(x => x.IsMoveSelected);
+                if (!selectedBoxes.Any()) selectedBoxes = new List<ClassBoxViewModel>() { selectedBox };
 
-            initialMousePosition = mousePosition;
-            initialClassBoxPosition = new Point(selectedBox.PosX, selectedBox.PosY);
+                foreach (var box in selectedBoxes) {
+                    initialClassBoxPositions.Add(box, new Point(box.PosX, box.PosY));
+                }
+                Console.WriteLine(initialClassBoxPositions.Count());
+                e.MouseDevice.Target.CaptureMouse();
+            }
+        }
 
-            // The mouse is captured, so the current shape will always be the target of the mouse events, 
-            //  even if the mouse is outside the application window.
-            e.MouseDevice.Target.CaptureMouse();
+        private void MouseDownCanvas(MouseButtonEventArgs e) {
+            var target = ((FrameworkElement)e.MouseDevice.Target).DataContext;
+            if (!isAddingLine && !(target is ClassBoxViewModel) ) {
+                SelectionBoxStart = Mouse.GetPosition(e.MouseDevice.Target);
+                e.MouseDevice.Target.CaptureMouse();
             }
         }
 
@@ -102,12 +125,33 @@ namespace TestApp.ViewModel
 
                 if (target is ClassBoxViewModel) {
                     ClassBoxViewModel selectedBox = (ClassBoxViewModel)target;
+                    var selectedBoxes = ClassBoxes.Where(x => x.IsMoveSelected);
+                    if (!selectedBoxes.Any()) selectedBoxes = new List<ClassBoxViewModel>() { selectedBox };
 
                     var mousePosition = RelativeMousePosition(e);
 
-                    selectedBox.PosX = initialClassBoxPosition.X + (mousePosition.X - initialMousePosition.X);
-                    selectedBox.PosY = initialClassBoxPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+                    foreach ( var box in selectedBoxes) {
+                        var originalPosition = initialClassBoxPositions[box];
+                        Console.WriteLine(originalPosition.X);
+                        box.PosX = originalPosition.X + (mousePosition.X - initialMousePosition.X);
+                        box.PosY = originalPosition.Y + (mousePosition.Y - initialMousePosition.Y);
+                    }
                 }
+            }
+        }
+
+        private void MouseMoveCanvas(MouseEventArgs e) {
+            var target = ((FrameworkElement)e.MouseDevice.Target).DataContext;
+            if (Mouse.Captured != null && !isAddingLine && !(target is ClassBoxViewModel)) {
+                var SelectionBoxNow = Mouse.GetPosition(e.MouseDevice.Target);
+                SelectionBoxX = Math.Min(SelectionBoxStart.X, SelectionBoxNow.X);
+                SelectionBoxY = Math.Min(SelectionBoxStart.Y, SelectionBoxNow.Y);
+                SelectionBoxWidth = Math.Abs(SelectionBoxNow.X - SelectionBoxStart.X);
+                SelectionBoxHeight = Math.Abs(SelectionBoxNow.Y - SelectionBoxStart.Y);
+                RaisePropertyChanged(() => SelectionBoxX);
+                RaisePropertyChanged(() => SelectionBoxY);
+                RaisePropertyChanged(() => SelectionBoxWidth);
+                RaisePropertyChanged(() => SelectionBoxHeight);
             }
         }
 
@@ -143,16 +187,45 @@ namespace TestApp.ViewModel
                 if (target is ClassBoxViewModel) {
                     ClassBoxViewModel selectedBox = (ClassBoxViewModel) target;
                     var mousePosition = RelativeMousePosition(e);
-                    undoRedoController.Add(new CommandMoveClassBox(selectedBox, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
-                    e.MouseDevice.Target.ReleaseMouseCapture();
+                    var selectedBoxes = ClassBoxes.Where(x => x.IsMoveSelected).ToList();
+                    if (!selectedBoxes.Any()) selectedBoxes = new List<ClassBoxViewModel>() { selectedBox };
 
-                    foreach (LineViewModel line in selectedBox.LineList) {
-                        int[] connectionsPoints = calculateConnectionPoints(line.fromBox, line.toBox);
-                        line.cF = connectionsPoints[0];
-                        line.cT = connectionsPoints[1];
-                        line.raisePropertyChanged();
+                    undoRedoController.Add(new CommandMoveClassBoxes( selectedBoxes, mousePosition.X - initialMousePosition.X, mousePosition.Y - initialMousePosition.Y));
+                    e.MouseDevice.Target.ReleaseMouseCapture();
+                    foreach (var box in selectedBoxes) {
+                        foreach (LineViewModel line in box.LineList) {
+                            int[] connectionsPoints = calculateConnectionPoints(line.fromBox, line.toBox);
+                            line.cF = connectionsPoints[0];
+                            line.cT = connectionsPoints[1];
+                            line.raisePropertyChanged();
+                        }
                     }
-               }
+
+                    initialClassBoxPositions.Clear();
+                    e.MouseDevice.Target.ReleaseMouseCapture();
+                }
+            }
+        }
+
+        private void MouseUpCanvas(MouseButtonEventArgs e) {
+            var target = ((FrameworkElement)e.MouseDevice.Target).DataContext;
+            if (!isAddingLine && !(target is ClassBoxViewModel)) {
+                Point SelectionBoxEnd = Mouse.GetPosition(e.MouseDevice.Target);
+                var smallX = Math.Min(SelectionBoxStart.X, SelectionBoxEnd.X);
+                var smallY = Math.Min(SelectionBoxStart.Y, SelectionBoxEnd.Y);
+                var largeX = Math.Max(SelectionBoxStart.X, SelectionBoxEnd.X);
+                var largeY = Math.Max(SelectionBoxStart.Y, SelectionBoxEnd.Y);
+
+                foreach (var box in ClassBoxes) {
+                    box.IsMoveSelected = box.CanvasCenterX > smallX && box.CanvasCenterX < largeX && box.CanvasCenterY > smallY && box.CanvasCenterY < largeY;
+                }
+
+                SelectionBoxX = SelectionBoxY = SelectionBoxWidth = SelectionBoxHeight = 0;
+                RaisePropertyChanged(() => SelectionBoxX);
+                RaisePropertyChanged(() => SelectionBoxY);
+                RaisePropertyChanged(() => SelectionBoxWidth);
+                RaisePropertyChanged(() => SelectionBoxHeight);
+                e.MouseDevice.Target.ReleaseMouseCapture();
             }
         }
 
@@ -252,12 +325,10 @@ namespace TestApp.ViewModel
                         }
                     }
 
-
                     line.fromBox.LineList.Add(line);
                     line.toBox.LineList.Add(line);
                 }
             }
         }
-
     }
 }

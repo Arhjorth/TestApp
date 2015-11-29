@@ -21,7 +21,7 @@ namespace TestApp.Model {
         public Point ConnectBottom { get; set; } = new Point();
         [XmlIgnore]
         public ArrayList LineList = new ArrayList();
-
+        
         public Point getPoint(int v1) {
 
             switch (v1) {
