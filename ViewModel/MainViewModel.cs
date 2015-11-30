@@ -14,6 +14,12 @@ using System.Linq;
 using Microsoft.Win32;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Net.Mail;
+using System.Net;
+using System.Xml.Serialization;
+using System.IO;
+using System.Net.Mime;
+using System.Text;
 
 namespace TestApp.ViewModel
 {
@@ -38,6 +44,8 @@ namespace TestApp.ViewModel
         public ICommand CommandSave { get; }
         public ICommand CommandNew { get; }
         public ICommand CommandAddMethod { get; }
+        public ICommand CommandSendEmail { get; }
+        public ICommand CommandOnSendEmail { get; }
 
         public static UndoRedoController undoRedoController = UndoRedoController.Instance;
 
@@ -52,6 +60,13 @@ namespace TestApp.ViewModel
         public double SelectionBoxWidth { get; set; }
         public double SelectionBoxHeight { get; set; }
 
+        // ####### EMAIL ########
+        public Visibility OnEmailSend { get; set; } = Visibility.Hidden;
+
+        public string UserEmail { get; set; } = "Please enter your email";
+
+
+        // ##############
         private bool isAddingLine;
 
         private ClassBoxViewModel addingLineFrom;
@@ -74,6 +89,9 @@ namespace TestApp.ViewModel
             CommandSave = new RelayCommand(SaveDiagram);
             CommandLoad = new RelayCommand(LoadDiagram);
             CommandNew = new RelayCommand(NewDiagram);
+            CommandSendEmail = new RelayCommand(SendXmlAsEmail);
+            CommandOnSendEmail = new RelayCommand(OnSendEmail);
+
 
             CommandUndo = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
             CommandRedo = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
@@ -81,6 +99,75 @@ namespace TestApp.ViewModel
           //  CommandMouseMoveClassbox = new RelayCommand<MouseButtonEventArgs>(MousemMoveClassBox);
 
         }
+
+
+        //########## EMAIL #######
+        private void OnSendEmail() {
+            if(OnEmailSend == Visibility.Hidden || OnEmailSend == Visibility.Collapsed) {
+                OnEmailSend = Visibility.Visible;
+                RaisePropertyChanged(nameof(OnEmailSend));
+            }
+            else {
+                OnEmailSend = Visibility.Hidden;
+                RaisePropertyChanged(nameof(OnEmailSend));
+            }
+        }
+        
+        private void SendXmlAsEmail() {
+            OnSendEmail();
+            Task.Run(() => SendXml());
+        }
+
+        private void SendXml() {
+            try {
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+
+                message.From = new MailAddress("arhjorth@hotmail.com");
+                message.To.Add(new MailAddress(UserEmail));
+                message.Subject = "Test";
+                message.Body = "Content";
+
+                Diagram diagram = new Diagram() { ClassBoxes = ClassBoxes.Select(x => x.ClassBox).ToList(), Lines = Lines.Select(x => x.Line).ToList() };
+
+                XmlSerializer xml = new XmlSerializer(diagram.GetType());
+
+
+                StringBuilder sb = new StringBuilder("");
+                StringWriter sw = new StringWriter(sb);
+
+                xml.Serialize(sw, diagram);
+                string old = "<?xml version=\"1.0\" encoding=\"utf-16\"?>";
+                string neew = "<?xml version=\"1.0\"?>";
+
+                Console.WriteLine(old);
+                Console.WriteLine(neew);
+
+                sb.Replace(old, neew);
+                Console.WriteLine(sb.ToString());
+                MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
+
+                ContentType ct = new ContentType();
+                ct.Name = "My Diagram" + ".xml";
+
+                Attachment at = new Attachment(memoryStream, ct);
+
+                message.Attachments.Add(at);
+
+                smtp.Port = 587;
+                smtp.Host = "smtp.live.com";
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential("arhjorth@hotmail.com", "3,141592653");
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.Send(message);
+            }
+            catch (Exception ex) {
+                MessageBox.Show("err: " + ex.Message);
+            }
+        }
+        // #############
+
 
         private void AddClassBox() {
             undoRedoController.AddAndExecute(new CommandAddClassBox(new ClassBoxViewModel() , ClassBoxes ));

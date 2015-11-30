@@ -29,6 +29,7 @@
     <DockPanel LastChildFill="True">
         <!-- Main menu-->
         <Menu DockPanel.Dock="Top" Background="White">
+            
             <MenuItem Header="File">
                 <MenuItem Header="_New" Command="{Binding CommandNew}">
                     <MenuItem.Icon>
@@ -72,6 +73,10 @@
                 <Image Source="/Images/Redo.png"/>
             </MenuItem.Icon>
             </MenuItem>
+            </MenuItem>
+
+            <MenuItem Header="Send Diagram" Command="{Binding CommandOnSendEmail}">
+            
             </MenuItem>
         </Menu>
 
@@ -139,6 +144,12 @@
                     </Border>
                 </Canvas>
 
+                <Canvas Width="300" Height="150" Visibility="{Binding OnEmailSend}" Background="Gray">
+                    <Button Width="80" Height="25" Margin="110,100,0,0" Content="Send Email" Command="{Binding CommandSendEmail}"></Button>
+                    <Button Width="25" Height="25" Margin="265,10" Content="X" Command="{Binding CommandOnSendEmail}"></Button>
+                    <TextBox x:Name="email" Width="200" Height="25" Margin="50,65" Text="{Binding UserEmail}"></TextBox>
+                </Canvas>
+
                 <!-- EVENT TRIGGERS FOR CANVAS-->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -151,7 +162,7 @@
                         <cmd:EventToCommand Command="{Binding CommandMouseUpCanvas}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-
+                
             </Grid>
         </Border>
     </DockPanel>
