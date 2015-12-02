@@ -92,15 +92,22 @@
 
         <!-- SIDE BAR -->
         <StackPanel Width="100" >
+            <Label Content="_Edit:" Foreground="Black"/>
             <Button x:Name="buttonAddClass" Content="Add Class" Command="{Binding CommandAddClassBox}" />
             <Button x:Name="buttonAddLine" Content="Add Line" Command="{Binding CommandAddLine}"/>
+            <Label Content="_Zoom:" Foreground="Black"/>
+            <Slider x:Name="zoomSlider" ToolTip="Zoom" Value="1" Minimum="0.1" Maximum="10" Margin="5"/>
             <!-- <Image Source="%PathToImage%"></Image> -->
         </StackPanel>
 
         <!-- CANVAS AREA -->
         <Border BorderBrush="Black" BorderThickness="1">
             <Grid>
-                
+
+                <Grid.LayoutTransform>
+                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=zoomSlider, Path=Value}" ScaleY="{Binding ElementName=zoomSlider, Path=Value}"/>
+                </Grid.LayoutTransform>
+
                 <!-- TILES TO THE BG -->
                 <Grid.Background>
                     <VisualBrush TileMode="Tile"
