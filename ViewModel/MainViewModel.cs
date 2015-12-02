@@ -46,6 +46,9 @@ namespace TestApp.ViewModel
         public ICommand CommandAddMethod { get; }
         public ICommand CommandSendEmail { get; }
         public ICommand CommandOnSendEmail { get; }
+        public ICommand CommandCut { get; }
+        public ICommand CommandCopy { get; }
+        public ICommand CommandPaste { get; }
 
         public static UndoRedoController undoRedoController = UndoRedoController.Instance;
 
@@ -68,6 +71,7 @@ namespace TestApp.ViewModel
 
         // ##############
         private bool isAddingLine;
+        private bool canPaste = false;
 
         private ClassBoxViewModel addingLineFrom;
 
@@ -91,8 +95,9 @@ namespace TestApp.ViewModel
             CommandNew = new RelayCommand(NewDiagram);
             CommandSendEmail = new RelayCommand(SendXmlAsEmail);
             CommandOnSendEmail = new RelayCommand(OnSendEmail);
-
-
+            CommandCut = new RelayCommand(Cut);
+            CommandCopy = new RelayCommand(Copy);
+            CommandPaste = new RelayCommand(Paste,CanPaste);
             CommandUndo = new RelayCommand(undoRedoController.Undo, undoRedoController.CanUndo);
             CommandRedo = new RelayCommand(undoRedoController.Redo, undoRedoController.CanRedo);
 
@@ -420,6 +425,72 @@ namespace TestApp.ViewModel
                     line.fromBox.LineList.Add(line);
                     line.toBox.LineList.Add(line);
                 }
+            }
+        }
+
+        public bool CanPaste() { return canPaste; }
+
+        private async void Cut() {
+            var selectedBoxes = ClassBoxes.Where(x => x.IsMoveSelected).ToList();
+            var selectedLines = new List<LineViewModel>();
+            foreach (LineViewModel line in Lines) {
+                foreach (ClassBoxViewModel box in selectedBoxes) {
+                    if (line.fromBox.equals(box) || line.toBox.equals(box)) {
+                        selectedLines.Add(line);
+                    }
+                }
+            }
+
+            foreach (ClassBoxViewModel box in selectedBoxes) {
+                undoRedoController.AddAndExecute(new CommandDeleteClassBox(box, ClassBoxes, Lines));
+            }
+
+            Diagram diagram = new Diagram() { ClassBoxes = selectedBoxes.Select(x => x.ClassBox).ToList(), Lines = selectedLines.Select(x => x.Line).ToList() };
+
+            var xml = await ControllerLoadSave.Instance.ToString(diagram);
+
+            Clipboard.SetText(xml);
+            canPaste = true;
+        }
+
+        private async void Copy() {
+            var selectedBoxes = ClassBoxes.Where(x => x.IsMoveSelected).ToList();
+            var selectedLines = Lines.Where(x => selectedBoxes.Contains(x.fromBox) || selectedBoxes.Contains(x.toBox));
+
+            Diagram diagram = new Diagram() { ClassBoxes = selectedBoxes.Select(x => x.ClassBox).ToList(), Lines = selectedLines.Select(x => x.Line).ToList() };
+
+            var xml = await ControllerLoadSave.Instance.ToString(diagram);
+
+            Clipboard.SetText(xml);
+            canPaste = true;
+        }
+
+        private async void Paste() {
+
+            var xml = Clipboard.GetText();
+            var diagram = await ControllerLoadSave.Instance.FromString(xml);
+            var boxes = diagram.ClassBoxes;
+            var lines = diagram.Lines;
+
+            foreach (ClassBox box in boxes) {
+                ClassBoxes.Add(new ClassBoxViewModel(box));
+            }
+            foreach (Line line in lines) {
+                Lines.Add(new LineViewModel(line));
+            }
+
+            foreach (Line line in lines) {
+                foreach (var box in boxes) {
+                    box.PosX += 50;
+                    box.PosY += 50;
+                    if ((box.PosX == line.fromBox.PosX) && (box.PosY == line.fromBox.PosY)) {
+                        line.fromBox = box;
+                    } else if ((box.PosX == line.toBox.PosX) && (box.PosY == line.toBox.PosY)) {
+                        line.toBox = box;
+                    }
+                }
+                line.fromBox.LineList.Add(line);
+                line.toBox.LineList.Add(line);
             }
         }
     }

@@ -24,12 +24,14 @@
         <KeyBinding Command="{Binding CommandLoad}" Gesture="CTRL+O"/>
         <KeyBinding Command="{Binding CommandAddClassBox}" Gesture="CTRL+A"/>
         <KeyBinding Command="{Binding CommandNew}" Gesture="CTRL+N"/>
+        <KeyBinding Command="{Binding CommandCut}" Gesture="CTRL+X"/>
+        <KeyBinding Command="{Binding CommandCopy}" Gesture="CTRL+C"/>
+        <KeyBinding Command="{Binding CommandPaste}" Gesture="CTRL+V"/>
     </Window.InputBindings>
 
     <DockPanel LastChildFill="True">
         <!-- Main menu-->
         <Menu DockPanel.Dock="Top" Background="White">
-            
             <MenuItem Header="File">
                 <MenuItem Header="_New" Command="{Binding CommandNew}">
                     <MenuItem.Icon>
@@ -47,36 +49,44 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <!-- TODO: Nice to have feature
-            <MenuItem Header="View" BorderBrush="Black">
-              <MenuItem Header="_ZoomIn"/>
-              <MenuItem Header="_ZoomOut"/>
-            </MenuItem> -->
             <MenuItem Header="Edit">
                 <MenuItem Header="_Add" Command="{Binding CommandAddClassBox}">
-                <MenuItem.Icon>
-                    <Image Source="/Images/Add.png"/>
-                </MenuItem.Icon>
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Add.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Remove">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Remove.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Undo" Command="{Binding CommandUndo}">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Undo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Redo" Command="{Binding CommandRedo}">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Redo.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Cut" Command="{Binding CommandCut}">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Cut.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Copy" Command="{Binding CommandCopy}">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Copy.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Paste" Command="{Binding CommandPaste}">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/Paste.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem Header="_Remove">
-                <MenuItem.Icon>
-                    <Image Source="/Images/Remove.png"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="_Undo" Command="{Binding CommandUndo}">
-            <MenuItem.Icon>
-                <Image Source="/Images/Undo.png"/>
-            </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="_Redo" Command="{Binding CommandRedo}">
-            <MenuItem.Icon>
-                <Image Source="/Images/Redo.png"/>
-            </MenuItem.Icon>
-            </MenuItem>
-            </MenuItem>
-
             <MenuItem Header="Send Diagram" Command="{Binding CommandOnSendEmail}">
-            
             </MenuItem>
         </Menu>
 
