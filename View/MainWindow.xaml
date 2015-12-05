@@ -55,11 +55,6 @@
                         <Image Source="/Images/Add.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Remove">
-                    <MenuItem.Icon>
-                        <Image Source="/Images/Remove.png"/>
-                    </MenuItem.Icon>
-                </MenuItem>
                 <MenuItem Header="_Undo" Command="{Binding CommandUndo}">
                     <MenuItem.Icon>
                         <Image Source="/Images/Undo.png"/>
@@ -96,7 +91,7 @@
             <Button x:Name="buttonAddClass" Content="Add Class" Command="{Binding CommandAddClassBox}" />
             <Button x:Name="buttonAddLine" Content="Add Line" Command="{Binding CommandAddLine}"/>
             <Label Content="_Zoom:" Foreground="Black"/>
-            <Slider x:Name="zoomSlider" ToolTip="Zoom" Value="1" Minimum="0.1" Maximum="10" Margin="5"/>
+            <Slider x:Name="zoomSlider" ToolTip="Zoom" Value="1" Minimum="0.1" Maximum="10" Margin="5" IsSnapToTickEnabled="True" TickPlacement="BottomRight" TickFrequency="1" Foreground="DarkGray"/>
             <!-- <Image Source="%PathToImage%"></Image> -->
         </StackPanel>
 
